@@ -1,1 +1,53 @@
 @import "tailwindcss";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Print styles */
+@media print {
+  /* Hide everything except the workout program */
+  body > *:not(.workout-program-preview) {
+    display: none !important;
+  }
+
+  /* Reset background colors and shadows for better printing */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    box-shadow: none !important;
+  }
+
+  /* Ensure proper page breaks */
+  .print-break-before {
+    break-before: page;
+  }
+
+  .print-break-after {
+    break-after: page;
+  }
+
+  /* Optimize colors for printing */
+  .bg-gradient-to-r {
+    background: #4f46e5 !important;
+  }
+
+  /* Ensure text is black for better printing */
+  .text-slate-600,
+  .text-slate-700,
+  .text-slate-800 {
+    color: #000 !important;
+  }
+
+  /* Adjust spacing for print */
+  .print-space-y-6 > * + * {
+    margin-top: 1.5rem !important;
+  }
+
+  /* Ensure proper margins */
+  @page {
+    margin: 1cm;
+  }
+}
+
+/* Rest of your existing styles */

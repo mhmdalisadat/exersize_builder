@@ -5,6 +5,7 @@ import { useWorkoutStore } from "./store/workoutStore";
 import { motion } from "framer-motion";
 import type { ExerciseMovement } from "./components/ExerciseMovement";
 import WorkoutProgramStep3 from "./components/WorkoutProgramStep3";
+import WorkoutProgramPreview from "./components/WorkoutProgramPreview";
 
 const App = () => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -401,7 +402,7 @@ const App = () => {
     );
   };
 
-  // Step 2 content - Assign muscle groups to each day
+
   const renderStep2Content = () => (
     <motion.div
       className="w-full flex justify-center"
@@ -423,10 +424,6 @@ const App = () => {
             <motion.div
               key={day.id}
               className="bg-white p-5 rounded-lg shadow-sm border border-slate-200"
-              whileHover={{
-                y: -2,
-                boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)",
-              }}
               transition={{ duration: 0.2 }}
             >
               <div className="flex justify-between items-center mb-4">
@@ -506,6 +503,24 @@ const App = () => {
     );
   };
 
+  const handlePrint = () => {
+    window.print();
+  };
+
+  // Step 4 content - Preview the complete program
+  const renderStep4Content = () => {
+    return (
+      <WorkoutProgramPreview
+        programName={workoutData.programName}
+        description={workoutData.description}
+        dayWorkouts={dayWorkouts}
+        getMuscleLabel={getMuscleLabel}
+        onBack={() => setCurrentStep(2)}
+        onPrint={handlePrint}
+      />
+    );
+  };
+
   // Render the current step content
   const renderCurrentStepContent = () => {
     switch (currentStep) {
@@ -515,6 +530,8 @@ const App = () => {
         return renderStep2Content();
       case 2:
         return renderStep3Content();
+      case 3:
+        return renderStep4Content();
       default:
         return renderStep1Content();
     }
@@ -536,6 +553,11 @@ const App = () => {
     {
       title: "حرکات تمرینی",
       description: "تعریف حرکات",
+      status: "default",
+    },
+    {
+      title: "پیش‌نمایش",
+      description: "مشاهده و چاپ برنامه",
       status: "default",
     },
   ];
