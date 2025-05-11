@@ -1,6 +1,9 @@
+@import "./styles/fonts.css";
 @import "tailwindcss";
 
-
+body {
+  font-family: "Modam", sans-serif;
+}
 
 /* Print styles */
 @media print {
