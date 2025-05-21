@@ -84,7 +84,9 @@ const ExerciseEditor = ({
 
           <ExerciseList
             initialExercises={currentDay.exercises}
-            onExercisesChange={handleExercisesChange}
+            onExercisesChange={(exercises) => {
+              handleExercisesChange(exercises);
+            }}
           />
         </motion.div>
       )}

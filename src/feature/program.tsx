@@ -183,11 +183,29 @@ const Program = () => {
     return option ? option.label : value;
   };
 
+  // Helper function for training system label
+  const getTrainingSystemLabel = (system: string) => {
+    switch (system) {
+      case "fullbody":
+        return "فول‌بادی";
+      case "split":
+        return "اسپلیت";
+      case "upper-lower":
+        return "بالا/پایین‌تنه";
+      case "push-pull-legs":
+        return "پوش/پول/لگ";
+      case "custom":
+        return "سفارشی";
+      default:
+        return system;
+    }
+  };
+
   const handlePrint = () => {
     window.print();
   };
 
-  // Step content rendering
+
   const renderCurrentStepContent = () => {
     switch (currentStep) {
       case 0:
@@ -235,6 +253,11 @@ const Program = () => {
             getMuscleLabel={getMuscleLabel}
             onBack={goToPreviousStep}
             onPrint={handlePrint}
+            name={workoutData.name}
+            height={workoutData.height}
+            weight={workoutData.weight}
+            trainingSystem={workoutData.trainingSystem}
+            getTrainingSystemLabel={getTrainingSystemLabel}
           />
         );
       default:

@@ -10,6 +10,7 @@ interface Step1FormProps {
     name: string;
     height: string;
     weight: string;
+    trainingSystem: string;
   };
   handleInputChange: (
     e: React.ChangeEvent<
@@ -125,6 +126,31 @@ const Step1Form: React.FC<Step1FormProps> = ({
                 className="w-full bg-transparent py-2 px-4 rounded-md text-right focus:outline-none"
                 placeholder="وزن (کیلوگرم)"
               />
+            </motion.div>
+          </motion.div>
+          {/* Training System */}
+          <motion.div className="w-1/2" variants={animations.item}>
+            <div className="text-right mb-2 text-slate-500 font-medium">
+              سیستم تمرینی
+            </div>
+            <motion.div
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              className="w-full bg-transparent text-slate-700 text-sm border border-slate-200 rounded-md shadow-sm hover:border-slate-400 transition duration-300 relative"
+            >
+              <select
+                name="trainingSystem"
+                value={workoutData.trainingSystem}
+                onChange={handleInputChange}
+                className="w-full bg-transparent py-2 px-4 rounded-md text-right focus:outline-none"
+              >
+                <option value="">انتخاب کنید...</option>
+                <option value="fullbody">فول‌بادی</option>
+                <option value="split">اسپلیت</option>
+                <option value="upper-lower">بالا/پایین‌تنه</option>
+                <option value="push-pull-legs">پوش/پول/لگ</option>
+                <option value="custom">سفارشی</option>
+              </select>
             </motion.div>
           </motion.div>
         </div>

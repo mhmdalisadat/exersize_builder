@@ -11,6 +11,11 @@ interface WorkoutProgramPreviewProps {
   getMuscleLabel: (value: string) => string;
   onBack: () => void;
   onPrint: () => void;
+  name: string;
+  height: string;
+  weight: string;
+  trainingSystem?: string;
+  getTrainingSystemLabel: (system: string) => string;
 }
 
 const WorkoutProgramPreview = ({
@@ -20,6 +25,11 @@ const WorkoutProgramPreview = ({
   getMuscleLabel,
   onBack,
   onPrint,
+  name,
+  height,
+  weight,
+  trainingSystem,
+  getTrainingSystemLabel,
 }: WorkoutProgramPreviewProps) => {
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -62,10 +72,181 @@ const WorkoutProgramPreview = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="w-full max-w-3xl mx-auto bg-white rounded-lg shadow-sm p-6 print:shadow-none print:p-0"
-      style={{ backgroundColor: "#ffffff" }}
+      className="bg-white print:bg-white"
+      style={{
+        width: "210mm",
+        minHeight: "297mm",
+        margin: "0 auto",
+        padding: "16mm 10mm",
+        boxSizing: "border-box",
+        borderRadius: "16px",
+        boxShadow: "0 4px 24px 0 rgba(60,72,100,0.07)",
+      }}
     >
       <div ref={contentRef}>
+        {/* User Information */}
+        <div className="mb-8 print:mb-6 flex flex-col items-center">
+          <div
+            className="w-full max-w-xl rounded-2xl shadow p-4 flex flex-wrap justify-between items-center gap-4 border"
+            style={{
+              background: "#fff",
+              borderColor: "#e0e7ef",
+              boxShadow: "0 4px 24px 0 rgba(60,72,100,0.07)",
+            }}
+          >
+            {/* Name */}
+            <div className="flex items-center gap-2">
+              <span
+                className="inline-flex items-center justify-center w-8 h-8 rounded-full"
+                style={{ backgroundColor: "#e0e7ff", color: "#3730a3" }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5.121 17.804A13.937 13.937 0 0112 15c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                </svg>
+              </span>
+              <span
+                style={{
+                  color: "#3730a3",
+                  fontWeight: "bold",
+                  fontSize: "1rem",
+                }}
+              >
+                {name}
+              </span>
+            </div>
+            {/* Height */}
+            <div className="flex items-center gap-2">
+              <span
+                className="inline-flex items-center justify-center w-8 h-8 rounded-full"
+                style={{ backgroundColor: "#dbeafe", color: "#2563eb" }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18V6a2 2 0 012-2h8a2 2 0 012 2v12"
+                  />
+                </svg>
+              </span>
+              <span
+                style={{
+                  color: "#2563eb",
+                  fontWeight: "bold",
+                  fontSize: "1rem",
+                }}
+              >
+                {height}{" "}
+                <span style={{ fontWeight: "normal", fontSize: "0.85rem" }}>
+                  سانتی‌متر
+                </span>
+              </span>
+            </div>
+            {/* Weight */}
+            <div className="flex items-center gap-2">
+              <span
+                className="inline-flex items-center justify-center w-8 h-8 rounded-full"
+                style={{ backgroundColor: "#dcfce7", color: "#15803d" }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M16 7a4 4 0 01-8 0"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 3v4"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 21h12"
+                  />
+                </svg>
+              </span>
+              <span
+                style={{
+                  color: "#15803d",
+                  fontWeight: "bold",
+                  fontSize: "1rem",
+                }}
+              >
+                {weight}{" "}
+                <span style={{ fontWeight: "normal", fontSize: "0.85rem" }}>
+                  کیلوگرم
+                </span>
+              </span>
+            </div>
+            {/* Training System */}
+            {trainingSystem && (
+              <div className="flex items-center gap-2">
+                <span
+                  className="inline-flex items-center justify-center w-8 h-8 rounded-full"
+                  style={{ backgroundColor: "#ede9fe", color: "#7c3aed" }}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-5 h-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 17v-2a4 4 0 018 0v2"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 7a4 4 0 100 8 4 4 0 000-8z"
+                    />
+                  </svg>
+                </span>
+                <span
+                  style={{
+                    color: "#7c3aed",
+                    fontWeight: "bold",
+                    fontSize: "1rem",
+                  }}
+                >
+                  {getTrainingSystemLabel(trainingSystem)}
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+
         {/* Header */}
         <div className="text-center mb-6 print:mb-4">
           <h1 className="text-2xl font-bold mb-2" style={{ color: "#4338ca" }}>
@@ -79,89 +260,152 @@ const WorkoutProgramPreview = ({
         </div>
 
         {/* Program Schedule */}
-        <div className="space-y-4">
+        <div style={{ marginTop: "32px" }}>
           {dayWorkouts.map((day) => (
             <div
               key={day.id}
-              className="border rounded-lg overflow-hidden print:break-inside-avoid"
-              style={{ borderColor: "#f1f5f9", backgroundColor: "#ffffff" }}
+              style={{
+                border: "1px solid #e0e7ef",
+                borderRadius: "12px",
+                marginBottom: "28px",
+                background: "#fff",
+                overflow: "hidden",
+                pageBreakInside: "avoid",
+              }}
             >
               {/* Day Header */}
               <div
-                className="px-4 py-2 text-white flex justify-between items-center"
-                style={{ backgroundColor: "#4f46e5" }}
+                style={{
+                  background: "#5b4fff",
+                  color: "#fff",
+                  padding: "12px 20px",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  fontWeight: 700,
+                  fontSize: "1.1rem",
+                }}
               >
-                <h2 className="text-base font-medium">روز {day.day}</h2>
-                <div className="text-sm opacity-90">
+                <span>روز {day.day}</span>
+                <span style={{ fontSize: "1rem", opacity: 0.95 }}>
                   {day.targetMuscles.map(getMuscleLabel).join(" + ")}
-                </div>
+                </span>
               </div>
-
               {/* Exercises */}
-              <div className="p-3">
+              <div style={{ padding: "18px 16px" }}>
                 {day.targetMuscles.includes("rest") ? (
                   <div
-                    className="text-center py-2"
-                    style={{ color: "#475569" }}
+                    style={{
+                      color: "#475569",
+                      textAlign: "center",
+                      fontSize: "1rem",
+                      padding: "12px 0",
+                    }}
                   >
-                    <p className="text-sm">روز استراحت</p>
+                    <p>روز استراحت</p>
                   </div>
                 ) : (
-                  <div className="space-y-3">
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "18px",
+                    }}
+                  >
                     {day.exercises.map((exercise, index) => (
                       <div
                         key={index}
-                        className="border-b pb-3 last:pb-0 last:border-0"
-                        style={{ borderColor: "#f1f5f9" }}
+                        style={{
+                          borderBottom:
+                            index === day.exercises.length - 1
+                              ? "none"
+                              : "1px solid #e0e7ef",
+                          paddingBottom: "12px",
+                        }}
                       >
-                        <div className="flex justify-between items-center mb-2">
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            marginBottom: "4px",
+                          }}
+                        >
                           <span
-                            className="text-sm font-medium"
-                            style={{ color: "#1e293b" }}
+                            style={{
+                              color: "#1e293b",
+                              fontWeight: 600,
+                              fontSize: "1rem",
+                            }}
                           >
                             {exercise.name}
                           </span>
                           <span
-                            className="text-xs px-2 py-0.5 rounded"
                             style={{
-                              backgroundColor: "#eef2ff",
+                              background: "#eef2ff",
                               color: "#4f46e5",
+                              fontSize: "0.95rem",
+                              borderRadius: "6px",
+                              padding: "2px 10px",
+                              fontWeight: 500,
                             }}
                           >
-                            {getMuscleLabel(exercise.targetMuscle)}
+                            {getMuscleLabel(exercise.muscleGroup)}
                           </span>
                         </div>
                         <div
-                          className="flex items-center gap-4 text-xs"
-                          style={{ color: "#475569" }}
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "18px",
+                            color: "#475569",
+                            fontSize: "0.98rem",
+                            marginBottom: exercise.description ? "6px" : 0,
+                          }}
                         >
-                          <div className="flex items-center gap-1">
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "4px",
+                            }}
+                          >
                             <span>ست:</span>
-                            <span
-                              className="font-medium"
-                              style={{ color: "#334155" }}
-                            >
+                            <span style={{ fontWeight: 600, color: "#334155" }}>
                               {exercise.sets}
                             </span>
                           </div>
-                          <div className="flex items-center gap-1">
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "4px",
+                            }}
+                          >
                             <span>تکرار:</span>
-                            <span
-                              className="font-medium"
-                              style={{ color: "#334155" }}
-                            >
+                            <span style={{ fontWeight: 600, color: "#334155" }}>
                               {exercise.reps}
                             </span>
                           </div>
-                          {exercise.description && (
-                            <div
-                              className="flex-1 text-left truncate"
-                              style={{ color: "#64748b" }}
-                            >
-                              {exercise.description}
-                            </div>
-                          )}
                         </div>
+                        {exercise.description && (
+                          <div
+                            style={{
+                              color: "#64748b",
+                              fontSize: "0.95rem",
+                              marginTop: "0.25rem",
+                              whiteSpace: "pre-line",
+                              wordBreak: "break-word",
+                              background: "#f8fafc",
+                              borderRadius: "8px",
+                              padding: "8px 12px",
+                              marginRight: "0",
+                              marginLeft: "0",
+                            }}
+                          >
+                            {exercise.description}
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>

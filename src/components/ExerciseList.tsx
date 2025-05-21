@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { ExerciseMovement } from "./ExerciseMovement";
 import { Trash2, Edit, Plus } from "lucide-react";
@@ -18,6 +18,11 @@ const ExerciseList: React.FC<ExerciseListProps> = ({
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingExercise, setEditingExercise] =
     useState<ExerciseMovement | null>(null);
+
+  // Update exercises when initialExercises changes
+  useEffect(() => {
+    setExercises(initialExercises);
+  }, [initialExercises]);
 
   const handleAddExercise = (exercise: ExerciseMovement) => {
     const updatedExercises = [...exercises, exercise];
@@ -170,7 +175,7 @@ const ExerciseList: React.FC<ExerciseListProps> = ({
                   </motion.button>
                 </div>
 
-                <div className="flex-1 text-right">
+                <div className="flex-1 mr-4">
                   <h3 className="font-medium text-slate-800">
                     {exercise.name}
                   </h3>

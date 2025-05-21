@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import SelectInput from "../selectInput";
 
 export interface ExerciseMovement {
   id: string;
@@ -29,7 +28,7 @@ const ExerciseMovementForm: React.FC<ExerciseMovementProps> = ({
       sets: "",
       reps: "",
       description: "",
-      muscleGroup: "",
+      muscleGroup: "chest", // Default value
     }
   );
 
@@ -43,36 +42,10 @@ const ExerciseMovementForm: React.FC<ExerciseMovementProps> = ({
     }));
   };
 
-  const handleSelectChange = (name: string) => (value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const isFormValid = () => {
-    return (
-      formData.name && formData.sets && formData.reps && formData.muscleGroup
-    );
-  };
-
   const handleSubmit = () => {
-    if (isFormValid()) {
-      onSave(formData);
-    }
+    onSave(formData);
   };
 
-  const muscleOptions = [
-    { value: "chest", label: "سینه" },
-    { value: "back", label: "پشت" },
-    { value: "shoulders", label: "شانه" },
-    { value: "arms", label: "پشت بازو" },
-    { value: "frontArms", label: "جلو بازو" },
-    { value: "legs", label: "پا" },
-    { value: "abs", label: "شکم" },
-  ];
-
-  
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
@@ -132,20 +105,6 @@ const ExerciseMovementForm: React.FC<ExerciseMovementProps> = ({
               placeholder="نام حرکت"
             />
           </motion.div>
-        </motion.div>
-
-        {/* Muscle Group */}
-        <motion.div variants={itemVariants}>
-          <div className="text-right mb-2 text-slate-500 font-medium">
-            گروه عضلانی
-          </div>
-          <SelectInput
-            options={muscleOptions}
-            value={formData.muscleGroup}
-            onChange={handleSelectChange("muscleGroup")}
-            className="w-full"
-            placeholder="انتخاب کنید"
-          />
         </motion.div>
 
         {/* Sets and Reps */}
@@ -208,40 +167,34 @@ const ExerciseMovementForm: React.FC<ExerciseMovementProps> = ({
               value={formData.description}
               onChange={handleInputChange}
               className="w-full bg-transparent py-2 px-4 rounded-md text-right resize-none focus:outline-none"
-              rows={3}
+              rows={4}
               placeholder="توضیحات حرکت را وارد کنید..."
             />
           </motion.div>
         </motion.div>
 
-        {/* Actions */}
+        {/* Buttons */}
         <motion.div
-          className="flex justify-between pt-2"
+          className="flex justify-end gap-4 mt-6"
           variants={itemVariants}
         >
           {onCancel && (
             <motion.button
               onClick={onCancel}
-              className="px-4 py-2 rounded-md text-slate-700 font-medium border border-slate-300 hover:bg-slate-50 transition-all"
+              className="px-6 py-2 rounded-lg text-slate-600 font-medium bg-slate-100 hover:bg-slate-200 transition-all"
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
             >
               انصراف
             </motion.button>
           )}
-
           <motion.button
             onClick={handleSubmit}
-            disabled={!isFormValid()}
-            className={`px-5 py-2 rounded-md text-white font-medium ${
-              isFormValid()
-                ? "bg-gradient-to-r from-blue-500 to-indigo-600 hover:shadow-md"
-                : "bg-gray-400 cursor-not-allowed"
-            }`}
-            whileHover={isFormValid() ? { scale: 1.03 } : {}}
-            whileTap={isFormValid() ? { scale: 0.97 } : {}}
+            className="px-6 py-2 rounded-lg text-white font-medium bg-indigo-600 hover:bg-indigo-700 transition-all"
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
           >
-            ذخیره حرکت
+            ذخیره
           </motion.button>
         </motion.div>
       </div>
