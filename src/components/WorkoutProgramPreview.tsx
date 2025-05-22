@@ -43,22 +43,35 @@ const WorkoutProgramPreview = ({
         useCORS: true,
         logging: false,
         backgroundColor: "#ffffff",
-        removeContainer: true, // This helps with potential color issues
+        removeContainer: true,
       });
 
       // Calculate dimensions
       const imgWidth = 210; // A4 width in mm
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      const pageHeight = 297; // A4 height in mm
 
       // Create PDF
       const pdf = new jsPDF({
-        orientation: imgHeight > imgWidth ? "portrait" : "landscape",
+        orientation: "portrait",
         unit: "mm",
+        format: "a4",
       });
 
-      // Add image to PDF
+      // Add image to PDF with pagination
       const imgData = canvas.toDataURL("image/jpeg", 1.0);
-      pdf.addImage(imgData, "JPEG", 0, 0, imgWidth, imgHeight);
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      while (heightLeft > 0) {
+        pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+
+        if (heightLeft > 0) {
+          pdf.addPage();
+          position -= pageHeight;
+        }
+      }
 
       // Download PDF
       pdf.save(`${programName || "workout-program"}.pdf`);
@@ -205,7 +218,7 @@ const WorkoutProgramPreview = ({
                 </span>
               </span>
             </div>
-            {/* Training System */}
+
             {trainingSystem && (
               <div className="flex items-center gap-2">
                 <span
@@ -253,9 +266,25 @@ const WorkoutProgramPreview = ({
             {programName}
           </h1>
           {description && (
-            <p className="text-sm mt-1" style={{ color: "#475569" }}>
-              {description}
-            </p>
+            <>
+              <div
+                style={{
+                  color: "#64748b",
+                  fontSize: "0.95rem",
+                  fontWeight: 500,
+                  marginBottom: 2,
+                  textAlign: "right",
+                }}
+              >
+                توضیحات برنامه
+              </div>
+              <p
+                className="text-sm mt-1"
+                style={{ color: "#475569", textAlign: "right" }}
+              >
+                {description}
+              </p>
+            </>
           )}
         </div>
 
@@ -273,11 +302,11 @@ const WorkoutProgramPreview = ({
                 pageBreakInside: "avoid",
               }}
             >
-              {/* Day Header */}
+      
               <div
                 style={{
-                  background: "#5b4fff",
-                  color: "#fff",
+                  background: "#e6f1fa",
+                  color: "#0077B5",
                   padding: "12px 20px",
                   display: "flex",
                   justifyContent: "space-between",
@@ -286,20 +315,22 @@ const WorkoutProgramPreview = ({
                   fontSize: "1.1rem",
                 }}
               >
-                <span>روز {day.day}</span>
-                <span style={{ fontSize: "1rem", opacity: 0.95 }}>
+                <span style={{ color: "#0077B5" }}>روز {day.day}</span>
+                <span
+                  style={{ fontSize: "1rem", opacity: 0.95, color: "#0077B5" }}
+                >
                   {day.targetMuscles.map(getMuscleLabel).join(" + ")}
                 </span>
               </div>
-              {/* Exercises */}
-              <div style={{ padding: "18px 16px" }}>
+          
+              <div style={{ padding: "10px 10px" }}>
                 {day.targetMuscles.includes("rest") ? (
                   <div
                     style={{
                       color: "#475569",
                       textAlign: "center",
-                      fontSize: "1rem",
-                      padding: "12px 0",
+                      fontSize: "0.95rem",
+                      padding: "8px 0",
                     }}
                   >
                     <p>روز استراحت</p>
@@ -309,7 +340,7 @@ const WorkoutProgramPreview = ({
                     style={{
                       display: "flex",
                       flexDirection: "column",
-                      gap: "18px",
+                      gap: "10px",
                     }}
                   >
                     {day.exercises.map((exercise, index) => (
@@ -320,93 +351,68 @@ const WorkoutProgramPreview = ({
                             index === day.exercises.length - 1
                               ? "none"
                               : "1px solid #e0e7ef",
-                          paddingBottom: "12px",
+                          paddingBottom: "7px",
+                          marginBottom: "8px",
                         }}
                       >
                         <div
                           style={{
                             display: "flex",
-                            justifyContent: "space-between",
                             alignItems: "center",
-                            marginBottom: "4px",
+                            marginBottom: "6px",
+                            gap: "10px",
                           }}
                         >
                           <span
                             style={{
-                              color: "#1e293b",
-                              fontWeight: 600,
+                              color: "#0077B5",
+                              fontWeight: 700,
                               fontSize: "1rem",
+                              minWidth: "90px",
+                              textAlign: "right",
+                              flexShrink: 0,
                             }}
                           >
                             {exercise.name}
                           </span>
+                          <div
+                            style={{
+                              flexGrow: 1,
+                              borderBottom: "1px solid #cbd5e1",
+                              margin: "0 8px",
+                            }}
+                          />
                           <span
                             style={{
-                              background: "#eef2ff",
-                              color: "#4f46e5",
-                              fontSize: "0.95rem",
-                              borderRadius: "6px",
-                              padding: "2px 10px",
+                              color: "#222",
                               fontWeight: 500,
+                              fontSize: "0.95rem",
+                              minWidth: "90px",
+                              textAlign: "left",
+                              flexShrink: 0,
                             }}
                           >
-                            {getMuscleLabel(exercise.muscleGroup)}
+                            ست: {exercise.sets} | تکرار: {exercise.reps}
                           </span>
                         </div>
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "18px",
-                            color: "#475569",
-                            fontSize: "0.98rem",
-                            marginBottom: exercise.description ? "6px" : 0,
-                          }}
-                        >
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: "4px",
-                            }}
-                          >
-                            <span>ست:</span>
-                            <span style={{ fontWeight: 600, color: "#334155" }}>
-                              {exercise.sets}
-                            </span>
-                          </div>
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: "4px",
-                            }}
-                          >
-                            <span>تکرار:</span>
-                            <span style={{ fontWeight: 600, color: "#334155" }}>
-                              {exercise.reps}
-                            </span>
-                          </div>
-                        </div>
                         {exercise.description && (
-                          <div
+                          <span
                             style={{
-                              color: "#64748b",
-                              fontSize: "0.95rem",
-                              marginTop: "0.25rem",
-                              whiteSpace: "pre-line",
-                              wordBreak: "break-word",
+                              color: "#444",
+                              fontSize: "0.92rem",
                               background: "#f8fafc",
                               borderRadius: "8px",
-                              padding: "8px 12px",
-                              marginRight: "0",
-                              marginLeft: "0",
+                              padding: "6px 10px",
+                              marginTop: "0",
+                              marginBottom: "0",
+                              width: "100%",
+                              textAlign: "right",
+                              display: "block",
                             }}
                           >
                             {exercise.description}
-                          </div>
-                        )}
-                      </div>
+                          </span>
+                        )}        </div>
                     ))}
                   </div>
                 )}
@@ -415,14 +421,13 @@ const WorkoutProgramPreview = ({
           ))}
         </div>
       </div>
-
-      {/* Action Buttons */}
       <div className="flex justify-between mt-6 print:hidden">
         <div className="flex gap-2">
           <motion.button
             onClick={onBack}
             whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            whileTap={{ scale: 0.98
+               }}
             className="px-4 py-1.5 text-sm rounded hover:bg-gray-200 transition-colors"
             style={{ backgroundColor: "#f1f5f9", color: "#334155" }}
           >
