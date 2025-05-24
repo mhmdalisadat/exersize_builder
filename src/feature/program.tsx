@@ -8,55 +8,8 @@ import WorkoutProgramStep3 from "../components/WorkoutProgramStep3";
 import WorkoutProgramPreview from "../components/WorkoutProgramPreview";
 import Step1Form from "../components/Step1Form";
 import Step2MuscleSelection from "../components/Step2MuscleSelection";
-
-const animations = {
-  container: {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        duration: 0.5,
-        when: "beforeChildren",
-        staggerChildren: 0.1,
-      },
-    },
-    exit: { opacity: 0, transition: { duration: 0.3 } },
-  },
-  item: {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { duration: 0.4, ease: "easeOut" },
-    },
-  },
-  button: {
-    hidden: { scale: 0.9, opacity: 0 },
-    visible: {
-      scale: 1,
-      opacity: 1,
-      transition: {
-        duration: 0.4,
-        delay: 0.6,
-        type: "spring",
-        stiffness: 500,
-      },
-    },
-    hover: { scale: 1.05, transition: { duration: 0.2 } },
-    tap: { scale: 0.95, transition: { duration: 0.1 } },
-    disabled: { scale: 1, opacity: 0.7 },
-  },
-};
-
-export const muscleOptions = [
-  { value: "chest", label: "سینه" },
-  { value: "back", label: "پشت" },
-  { value: "shoulders", label: "شانه" },
-  { value: "arms", label: "بازو" },
-  { value: "legs", label: "پا" },
-  { value: "abs", label: "شکم" },
-  { value: "rest", label: "استراحت" },
-];
+import { muscleOptions } from "../constants";
+import { animations } from "../animation";
 
 const Program = () => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -201,11 +154,6 @@ const Program = () => {
     }
   };
 
-  const handlePrint = () => {
-    window.print();
-  };
-
-
   const renderCurrentStepContent = () => {
     switch (currentStep) {
       case 0:
@@ -252,7 +200,6 @@ const Program = () => {
             dayWorkouts={dayWorkouts}
             getMuscleLabel={getMuscleLabel}
             onBack={goToPreviousStep}
-            onPrint={handlePrint}
             name={workoutData.name}
             height={workoutData.height}
             weight={workoutData.weight}

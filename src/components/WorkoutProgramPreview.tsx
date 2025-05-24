@@ -10,7 +10,7 @@ interface WorkoutProgramPreviewProps {
   dayWorkouts: DayWorkout[];
   getMuscleLabel: (value: string) => string;
   onBack: () => void;
-  onPrint: () => void;
+
   name: string;
   height: string;
   weight: string;
@@ -24,7 +24,7 @@ const WorkoutProgramPreview = ({
   dayWorkouts,
   getMuscleLabel,
   onBack,
-  onPrint,
+
   name,
   height,
   weight,
@@ -302,7 +302,6 @@ const WorkoutProgramPreview = ({
                 pageBreakInside: "avoid",
               }}
             >
-      
               <div
                 style={{
                   background: "#e6f1fa",
@@ -322,7 +321,7 @@ const WorkoutProgramPreview = ({
                   {day.targetMuscles.map(getMuscleLabel).join(" + ")}
                 </span>
               </div>
-          
+
               <div style={{ padding: "10px 10px" }}>
                 {day.targetMuscles.includes("rest") ? (
                   <div
@@ -412,7 +411,8 @@ const WorkoutProgramPreview = ({
                           >
                             {exercise.description}
                           </span>
-                        )}        </div>
+                        )}{" "}
+                      </div>
                     ))}
                   </div>
                 )}
@@ -426,8 +426,7 @@ const WorkoutProgramPreview = ({
           <motion.button
             onClick={onBack}
             whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98
-               }}
+            whileTap={{ scale: 0.98 }}
             className="px-4 py-1.5 text-sm rounded hover:bg-gray-200 transition-colors"
             style={{ backgroundColor: "#f1f5f9", color: "#334155" }}
           >
@@ -457,29 +456,6 @@ const WorkoutProgramPreview = ({
               />
             </svg>
             دانلود PDF
-          </motion.button>
-          <motion.button
-            onClick={onPrint}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="px-4 py-1.5 text-sm rounded transition-colors flex items-center gap-1"
-            style={{ backgroundColor: "#475569", color: "#ffffff" }}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
-              />
-            </svg>
-            چاپ برنامه
           </motion.button>
         </div>
       </div>
