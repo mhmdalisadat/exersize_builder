@@ -16,6 +16,7 @@ interface WorkoutData {
   height: string;
   weight: string;
   trainingSystem: string;
+  purpose: string;
 }
 
 interface WorkoutStore {
@@ -41,6 +42,7 @@ const initialWorkoutData: WorkoutData = {
   height: "",
   weight: "",
   trainingSystem: "",
+  purpose: "",
 };
 
 export const useWorkoutStore = create<WorkoutStore>((set) => ({

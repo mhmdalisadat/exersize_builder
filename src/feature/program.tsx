@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import Stepper from "../stepper/stepper";
+import MobileStepper from "../stepper/MobileStepper";
 import type { Step } from "../stepper/types";
 import { useWorkoutStore } from "../store/workoutStore";
 import { motion } from "framer-motion";
 import type { ExerciseMovement } from "../components/ExerciseMovement";
 import WorkoutProgramStep3 from "../components/WorkoutProgramStep3";
 import WorkoutProgramPreview from "../components/WorkoutProgramPreview";
-import Step1Form from "../components/Step1Form";
-import Step2MuscleSelection from "../components/Step2MuscleSelection";
 import { muscleOptions } from "../constants";
 import { animations } from "../animation";
+import { WorkoutDetails, WorkoutMuscleDays } from "../components";
 
 const Program = () => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -154,11 +154,29 @@ const Program = () => {
     }
   };
 
+  // Helper function for purpose label
+  const getPurposeLabel = (purpose: string) => {
+    switch (purpose) {
+      case "weight-loss":
+        return "کاهش وزن";
+      case "muscle-gain":
+        return "افزایش حجم عضلات";
+      case "strength":
+        return "افزایش قدرت";
+      case "endurance":
+        return "افزایش استقامت";
+      case "general-fitness":
+        return "تناسب اندام عمومی";
+      default:
+        return purpose;
+    }
+  };
+
   const renderCurrentStepContent = () => {
     switch (currentStep) {
       case 0:
         return (
-          <Step1Form
+          <WorkoutDetails
             workoutData={workoutData}
             handleInputChange={handleInputChange}
             handleNextStep={handleNextStep}
@@ -168,7 +186,7 @@ const Program = () => {
         );
       case 1:
         return (
-          <Step2MuscleSelection
+          <WorkoutMuscleDays
             dayWorkouts={dayWorkouts}
             handleDayMuscleChange={handleDayMuscleChange}
             getMuscleLabel={getMuscleLabel}
@@ -205,6 +223,8 @@ const Program = () => {
             weight={workoutData.weight}
             trainingSystem={workoutData.trainingSystem}
             getTrainingSystemLabel={getTrainingSystemLabel}
+            purpose={workoutData.purpose}
+            getPurposeLabel={getPurposeLabel}
           />
         );
       default:
@@ -236,6 +256,30 @@ const Program = () => {
       status: "default",
     },
   ];
+
+  const handleBack = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentStep < steps.length - 1) {
+      handleNextStep();
+    }
+  };
+
+  const validateCurrentStep = () => {
+    switch (currentStep) {
+      case 0:
+        return validateStep1();
+      case 1:
+        return validateStep2();
+      default:
+        return true;
+    }
+  };
+
   return (
     <div
       className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-12"
@@ -256,14 +300,28 @@ const Program = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          <Stepper
-            steps={steps}
-            currentStep={currentStep}
-            onStepClick={handleStepClick}
-            size="medium"
-            stepSpacing="loose"
-            orientation="horizontal"
-          />
+          {/* Desktop Stepper */}
+          <div className="hidden md:block">
+            <Stepper
+              steps={steps}
+              currentStep={currentStep}
+              onStepClick={handleStepClick}
+              size="medium"
+              stepSpacing="loose"
+              orientation="horizontal"
+            />
+          </div>
+
+          {/* Mobile Stepper */}
+          <div className="md:hidden">
+            <MobileStepper
+              steps={steps}
+              currentStep={currentStep}
+              onBack={handleBack}
+              onNext={handleNext}
+              validateCurrentStep={validateCurrentStep}
+            />
+          </div>
 
           <div className="mt-16">{renderCurrentStepContent()}</div>
         </motion.div>
