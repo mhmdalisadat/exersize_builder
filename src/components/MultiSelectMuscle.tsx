@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { muscleOptions } from "../feature/program";
+import { muscleOptions } from "../constants";
 
 interface MuscleOption {
   value: string;
