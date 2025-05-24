@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import React from "react";
-import type { WorkoutDetailsPropsType } from "../types";
-import { FormField } from ".";
-import { purposeOptions, trainingSystemOptions } from "../constants";
+import type { WorkoutDetailsPropsType } from "../../types";
+import FormField from "./formfield";
+import { purposeOptions, trainingSystemOptions } from "../../constants";
 
 const WorkoutDetails: React.FC<WorkoutDetailsPropsType> = ({
   workoutData,
@@ -91,6 +91,12 @@ const WorkoutDetails: React.FC<WorkoutDetailsPropsType> = ({
     (field) => field.section === "program"
   );
 
+  const handleImageChange = (img: string) => {
+    handleInputChange({
+      target: { name: "userImage", value: img },
+    } as React.ChangeEvent<HTMLInputElement>);
+  };
+
   return (
     <motion.div
       className="w-full flex justify-center px-4 sm:px-6 lg:px-8"
@@ -100,6 +106,57 @@ const WorkoutDetails: React.FC<WorkoutDetailsPropsType> = ({
       exit="exit"
     >
       <div className="w-full max-w-4xl flex flex-col">
+        <div className="mb-6 flex flex-col items-center w-full">
+          <label
+            htmlFor="userImage"
+            className="flex flex-col items-center cursor-pointer w-28 h-28 rounded-full border-2 border-dashed border-blue-300 bg-blue-50 hover:bg-blue-100 transition mb-2"
+          >
+            {workoutData.userImage ? (
+              <img
+                src={workoutData.userImage}
+                alt="User"
+                className="w-28 h-28 rounded-full object-cover"
+              />
+            ) : (
+              <span className="flex flex-col items-center justify-center h-full text-blue-400">
+                <svg
+                  className="w-8 h-8 mb-1"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 4v16m8-8H4"
+                  />
+                </svg>
+                <span className="text-xs text-blue-500">افزودن تصویر</span>
+              </span>
+            )}
+            <input
+              id="userImage"
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  const reader = new FileReader();
+                  reader.onload = (ev) => {
+                    handleImageChange((ev.target?.result as string) || "");
+                  };
+                  reader.readAsDataURL(file);
+                }
+              }}
+            />
+          </label>
+          <span className="text-xs text-slate-500 mt-1">
+            عکس پروفایل (اختیاری)
+          </span>
+        </div>
+
         <div className="flex flex-col sm:flex-row gap-4 mb-6 sm:mb-10">
           {personalFields.map((field) => (
             <FormField

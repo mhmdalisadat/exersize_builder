@@ -1,9 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { motion } from "framer-motion";
 import React from "react";
-import type { FormFieldPropsType } from "../types";
-
-
+import type { FormFieldPropsType } from "../../types";
 
 const FormField: React.FC<FormFieldPropsType> = ({
   label,

@@ -1,4 +1,4 @@
-import type { DayCardPropsType } from "../types";
+import type { DayCardPropsType } from "../../types";
 import { motion } from "framer-motion";
 import MultiSelectMuscle from "./MultiSelectMuscle";
 

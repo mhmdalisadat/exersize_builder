@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 
-import type { DayWorkout } from "../store/workoutStore";
+import type { DayWorkout } from "../../store/workoutStore";
 
 interface WorkoutSummaryProps {
   programName: string;
@@ -16,7 +16,6 @@ const WorkoutSummary = ({
   getMuscleLabel,
 }: WorkoutSummaryProps) => {
   const containerVariants = {
-    
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -42,22 +41,22 @@ const WorkoutSummary = ({
   };
 
   return (
-    <motion.div variants={containerVariants} className="space-y-6">
+    <motion.div variants={containerVariants} className="space-y-4 sm:space-y-6">
       {/* Program Summary */}
       <motion.div
-        className="bg-indigo-50 p-6 rounded-lg border border-indigo-100 mb-8"
+        className="bg-indigo-50 p-4 sm:p-6 rounded-lg border border-indigo-100 mb-6 sm:mb-8"
         variants={itemVariants}
       >
-        <div className="flex justify-between items-center mb-4">
-          <div className="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-md text-sm font-medium">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
+          <div className="bg-indigo-100 text-indigo-700 px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm font-medium">
             {dayWorkouts.length} روز
           </div>
-          <h3 className="text-right text-xl font-bold text-indigo-800">
+          <h3 className="text-right text-lg sm:text-xl font-bold text-indigo-800">
             {programName}
           </h3>
         </div>
         {description && (
-          <p className="text-right text-indigo-700 text-sm mb-2">
+          <p className="text-right text-indigo-700 text-xs sm:text-sm mb-2">
             {description}
           </p>
         )}
@@ -67,7 +66,7 @@ const WorkoutSummary = ({
       {dayWorkouts.map((day) => (
         <motion.div
           key={day.id}
-          className="bg-white p-5 rounded-lg shadow-sm border border-slate-200"
+          className="bg-white p-4 sm:p-5 rounded-lg shadow-sm border border-slate-200"
           variants={itemVariants}
           whileHover={{
             y: -2,
@@ -75,24 +74,24 @@ const WorkoutSummary = ({
           }}
           transition={{ duration: 0.2 }}
         >
-          <div className="flex justify-between items-center mb-4">
-            <div className="bg-indigo-50 text-indigo-700 rounded-full h-7 w-7 flex items-center justify-center text-sm font-medium">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
+            <div className="bg-indigo-50 text-indigo-700 rounded-full h-6 w-6 sm:h-7 sm:w-7 flex items-center justify-center text-xs sm:text-sm font-medium">
               {day.day}
             </div>
-            <h3 className="text-right text-lg font-medium text-slate-800">
+            <h3 className="text-right text-base sm:text-lg font-medium text-slate-800">
               روز {day.day}
             </h3>
           </div>
 
           <div className="mb-3">
-            <div className="text-right mb-2 text-slate-600 text-sm font-medium">
+            <div className="text-right mb-2 text-slate-600 text-xs sm:text-sm font-medium">
               گروه‌های عضلانی:
             </div>
             <div className="flex flex-wrap gap-1 justify-end">
               {day.targetMuscles.map((muscle) => (
                 <span
                   key={muscle}
-                  className="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-md text-sm"
+                  className="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-md text-xs sm:text-sm"
                 >
                   {getMuscleLabel(muscle)}
                 </span>
@@ -101,30 +100,30 @@ const WorkoutSummary = ({
           </div>
 
           {day.targetMuscles.includes("rest") ? (
-            <div className="mt-3 text-right text-amber-600 text-sm font-medium">
+            <div className="mt-3 text-right text-amber-600 text-xs sm:text-sm font-medium">
               این روز به عنوان روز استراحت در نظر گرفته شده است.
             </div>
           ) : (
             <>
-              <div className="text-right mb-2 text-slate-600 text-sm font-medium mt-4">
+              <div className="text-right mb-2 text-slate-600 text-xs sm:text-sm font-medium mt-4">
                 تمرین‌ها:
               </div>
               {day.exercises.length > 0 ? (
-                <div className="space-y-3">
+                <div className="space-y-2 sm:space-y-3">
                   {day.exercises.map((exercise) => (
                     <div
                       key={exercise.id}
-                      className="bg-slate-50 p-3 rounded-md border border-slate-100"
+                      className="bg-slate-50 p-2 sm:p-3 rounded-md border border-slate-100"
                     >
-                      <div className="flex justify-between items-center mb-2">
+                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-4 mb-2">
                         <span className="text-indigo-700 text-xs bg-indigo-50 px-2 py-0.5 rounded">
                           {getMuscleLabel(exercise.muscleGroup)}
                         </span>
-                        <h4 className="text-right font-medium text-slate-700">
+                        <h4 className="text-right font-medium text-slate-700 text-sm sm:text-base">
                           {exercise.name}
                         </h4>
                       </div>
-                      <div className="flex justify-end gap-3 text-sm text-slate-600">
+                      <div className="flex justify-end gap-2 sm:gap-3 text-xs sm:text-sm text-slate-600">
                         <span>{exercise.reps} تکرار</span>
                         <span>{exercise.sets} ست</span>
                       </div>
@@ -137,7 +136,7 @@ const WorkoutSummary = ({
                   ))}
                 </div>
               ) : (
-                <div className="text-right text-slate-500 text-sm italic">
+                <div className="text-right text-slate-500 text-xs sm:text-sm italic">
                   هنوز تمرینی تعریف نشده است.
                 </div>
               )}

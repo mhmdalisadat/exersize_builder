@@ -1,14 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface WorkoutDetailsPropsType {
     workoutData: {
-      programName: string;
-      daysPerWeek: string;
-      description: string;
-      name: string;
-      height: string;
-      weight: string;
-      trainingSystem: string;
-      purpose: string;
+    programName: string;
+    daysPerWeek: string;
+    userImage?: string;
+    description: string;
+    name: string;
+    height: string;
+    weight: string;
+    trainingSystem: string;
+    purpose: string;
     };
     handleInputChange: (
       e: React.ChangeEvent<

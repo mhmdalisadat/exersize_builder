@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { ExerciseMovement } from "../components/ExerciseMovement";
+import type { ExerciseMovement } from "../components/workoutProgram/ExerciseMovement";
 
 export interface DayWorkout {
   day: number;
@@ -17,6 +17,7 @@ interface WorkoutData {
   weight: string;
   trainingSystem: string;
   purpose: string;
+  userImage?: string; // base64 or URL
 }
 
 interface WorkoutStore {
@@ -43,6 +44,7 @@ const initialWorkoutData: WorkoutData = {
   weight: "",
   trainingSystem: "",
   purpose: "",
+  userImage: "",
 };
 
 export const useWorkoutStore = create<WorkoutStore>((set) => ({

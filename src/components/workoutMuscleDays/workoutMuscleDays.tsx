@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import React from "react";
-import type { MusclesDaysSelectionPropsType } from "../types";
-import { NavigationButtons, DayCard } from ".";
+import type { MusclesDaysSelectionPropsType } from "../../types";
+import { NavigationButtons, DayCard } from "..";
 
 const WorkoutMuscleDays: React.FC<MusclesDaysSelectionPropsType> = ({
   dayWorkouts,

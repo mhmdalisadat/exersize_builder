@@ -6,6 +6,8 @@ const NavigationButtons: React.FC<NavigationButtonsPropsType> = ({
   onNext,
   isNextDisabled,
   variants,
+  nextButtonText = "مرحله بعد",
+  nextButtonClassName = "bg-gradient-to-r from-blue-500 to-indigo-600",
 }) => (
   <motion.div
     className="flex justify-between w-full mt-4 sm:mt-6 gap-2 sm:gap-4"
@@ -25,15 +27,13 @@ const NavigationButtons: React.FC<NavigationButtonsPropsType> = ({
       onClick={onNext}
       disabled={isNextDisabled}
       className={`flex-1 px-4 sm:px-10 py-2 sm:py-3 rounded-lg text-white text-sm sm:text-base font-medium shadow-md ${
-        !isNextDisabled
-          ? "bg-gradient-to-r from-blue-500 to-indigo-600"
-          : "bg-gray-400 cursor-not-allowed"
+        !isNextDisabled ? nextButtonClassName : "bg-gray-400 cursor-not-allowed"
       }`}
       variants={variants}
       whileHover={!isNextDisabled ? "hover" : "disabled"}
       whileTap={!isNextDisabled ? "tap" : "disabled"}
     >
-      مرحله بعد
+      {nextButtonText}
     </motion.button>
   </motion.div>
 );

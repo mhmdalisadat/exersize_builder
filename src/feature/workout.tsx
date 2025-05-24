@@ -1,17 +1,19 @@
 import { useState, useEffect } from "react";
-import Stepper from "../stepper/stepper";
-import MobileStepper from "../stepper/MobileStepper";
+import { MobileStepper, Stepper } from "../stepper";
 import type { Step } from "../stepper/types";
-import { useWorkoutStore } from "../store/workoutStore";
+import { useWorkoutStore } from "../store";
 import { motion } from "framer-motion";
-import type { ExerciseMovement } from "../components/ExerciseMovement";
-import WorkoutProgramStep3 from "../components/WorkoutProgramStep3";
-import WorkoutProgramPreview from "../components/WorkoutProgramPreview";
 import { muscleOptions } from "../constants";
 import { animations } from "../animation";
-import { WorkoutDetails, WorkoutMuscleDays } from "../components";
+import {
+  WorkoutDetails,
+  WorkoutMuscleDays,
+  WorkoutProgram,
+  WorkoutPerview,
+} from "../components";
+import type { ExerciseMovement } from "../components/workoutProgram/ExerciseMovement";
 
-const Program = () => {
+const Workout = () => {
   const [currentStep, setCurrentStep] = useState(0);
 
   const {
@@ -198,7 +200,7 @@ const Program = () => {
         );
       case 2:
         return (
-          <WorkoutProgramStep3
+          <WorkoutProgram
             programName={workoutData.programName}
             description={workoutData.description}
             dayWorkouts={dayWorkouts}
@@ -212,7 +214,7 @@ const Program = () => {
         );
       case 3:
         return (
-          <WorkoutProgramPreview
+          <WorkoutPerview
             programName={workoutData.programName}
             description={workoutData.description}
             dayWorkouts={dayWorkouts}
@@ -330,4 +332,4 @@ const Program = () => {
   );
 };
 
-export default Program;
+export default Workout;

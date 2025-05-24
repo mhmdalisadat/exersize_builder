@@ -1,11 +1,7 @@
-import Program from "./feature/program";
+import { Workout } from "./feature";
 
 const App = () => {
-  return (
-    <div>
-      <Program />
-    </div>
-  );
+  return <Workout />;
 };
 
 export default App;
