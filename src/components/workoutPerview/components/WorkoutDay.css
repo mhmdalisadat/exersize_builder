@@ -1,0 +1,236 @@
+/* Root container */
+.workoutday-root {
+  background: rgb(255, 255, 255);
+  border: 1px solid rgb(86, 119, 188);
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 4px rgba(86, 119, 188, 0.08);
+  overflow: hidden;
+  margin-bottom: 1.25rem;
+  direction: rtl;
+}
+
+.workoutday-header {
+  background: rgba(86, 119, 188, 0.1);
+  border-bottom: 1px solid rgb(86, 119, 188);
+  padding: 0.75rem 1rem;
+  direction: rtl;
+}
+
+.workoutday-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  direction: rtl;
+}
+
+.workoutday-header-title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  direction: rtl;
+}
+
+.workoutday-day-number {
+  color: rgb(0, 0, 0);
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.workoutday-day-title {
+  color: rgb(0, 0, 0);
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.workoutday-muscles {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  direction: rtl;
+}
+
+.workoutday-muscle-badge {
+  color: rgb(0, 0, 0);
+
+  padding: 0.15rem 0.6rem;
+  font-size: 0.85rem;
+  display: inline-block;
+}
+
+.workoutday-content {
+  padding: 1rem;
+  direction: rtl;
+}
+
+.workoutday-rest {
+  text-align: center;
+  padding: 1.5rem 0;
+  direction: rtl;
+}
+
+.workoutday-rest-icon {
+  width: 3rem;
+  height: 3rem;
+  background: rgba(86, 119, 188, 0.1);
+  border-radius: 50%;
+  margin: 0 auto 0.5rem auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.workoutday-rest-svg {
+  color: rgb(0, 0, 0);
+  width: 2rem;
+  height: 2rem;
+}
+
+.workoutday-rest-text {
+  color: rgb(0, 0, 0);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.workoutday-exercise-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  direction: rtl;
+}
+
+.workoutday-exercise-item {
+  background: rgba(86, 119, 188, 0.05);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  direction: rtl;
+}
+
+.workoutday-exercise-item-mb {
+  margin-bottom: 0.5rem;
+}
+
+.workoutday-exercise-row {
+  display: flex;
+  align-items: flex-start;
+  direction: rtl;
+}
+
+.workoutday-exercise-main {
+  flex-grow: 1;
+  direction: rtl;
+}
+
+.workoutday-exercise-title-group {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  direction: rtl;
+}
+
+.workoutday-exercise-title {
+  color: rgb(0, 0, 0);
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.workoutday-settype-badge {
+  color: rgb(86, 119, 188);
+  border-radius: 9999px;
+  padding: 0.1rem 0.5rem;
+  font-size: 0.85rem;
+
+  text-align: left;
+}
+
+.workoutday-sets-reps {
+  color: rgb(0, 0, 0);
+  font-size: 0.85rem;
+  margin-right: 0.2rem;
+}
+
+.workoutday-plus {
+  color: rgb(0, 0, 0);
+  font-size: 1.5rem;
+  margin: 0 0.2rem;
+}
+
+.workoutday-related-badge {
+  color: rgb(0, 0, 0);
+
+  border-radius: 0.5rem;
+  padding: 0.1rem 0.5rem;
+  font-size: 0.85rem;
+  display: inline-block;
+}
+
+.workoutday-settype-detail {
+  background: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
+  border: 1px solid rgb(86, 119, 188);
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  padding: 0.2rem 0.5rem;
+  display: inline-block;
+  direction: rtl;
+}
+
+.workoutday-exercise-desc {
+  color: rgb(0, 0, 0);
+
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  padding: 0.2rem 0.5rem;
+  display: inline-block;
+  direction: rtl;
+}
+
+@media (max-width: 900px) {
+  .workoutday-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}
+
+.pdf-export .workoutday-root,
+.pdf-export .workoutday-header,
+.pdf-export .workoutday-header-row,
+.pdf-export .workoutday-header-title-group,
+.pdf-export .workoutday-day-number,
+.pdf-export .workoutday-day-title,
+.pdf-export .workoutday-muscles,
+.pdf-export .workoutday-muscle-badge,
+.pdf-export .workoutday-content,
+.pdf-export .workoutday-exercise-list,
+.pdf-export .workoutday-exercise-item,
+.pdf-export .workoutday-exercise-row,
+.pdf-export .workoutday-exercise-main,
+.pdf-export .workoutday-exercise-title-group,
+.pdf-export .workoutday-exercise-title,
+.pdf-export .workoutday-settype-badge,
+.pdf-export .workoutday-sets-reps,
+.pdf-export .workoutday-plus,
+.pdf-export .workoutday-related-badge,
+.pdf-export .workoutday-settype-detail,
+.pdf-export .workoutday-exercise-desc {
+  font-size: 0.7rem !important;
+  padding: 0.2rem !important;
+  margin: 0.1rem 0 !important;
+}
+
+.pdf-export .workoutday-day-number {
+  width: 1rem !important;
+  height: 1rem !important;
+  font-size: 0.7rem !important;
+}

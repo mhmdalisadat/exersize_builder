@@ -13,6 +13,7 @@
     "@react-pdf/renderer": "^4.3.0",
     "@tailwindcss/vite": "^4.1.5",
     "html2canvas": "^1.4.1",
+    "html2pdf.js": "^0.10.3",
     "jspdf": "^3.0.1",
     "lucide-react": "^0.507.0",
     "motion": "^12.9.5",

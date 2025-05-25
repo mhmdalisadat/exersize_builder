@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import "./UserInfo.css";
 
 interface UserInfoProps {
   name: string;
@@ -27,31 +28,31 @@ const UserInfo = ({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="w-full max-w-2xl mx-auto mb-8"
+      className="userinfo-root"
     >
-      <div className="bg-gradient-to-br from-indigo-50 to-white rounded-2xl shadow-lg overflow-hidden border border-indigo-100">
-        {/* Header with gradient background */}
-        <div className="bg-gradient-to-r from-indigo-600 to-blue-500 p-4 text-white">
-          <h2 className="text-xl font-bold text-center">مشخصات</h2>
+      <div className="userinfo-container">
+        {/* Header with solid background */}
+        <div className="userinfo-header">
+          <h2 className="userinfo-title">مشخصات</h2>
         </div>
 
-        <div className="p-6">
-          <div className="flex flex-col md:flex-row gap-6">
+        <div style={{ direction: "rtl" }} className="userinfo-content">
+          <div className="userinfo-main-row">
             {/* User Image Section */}
-            <div className="flex-shrink-0 flex flex-col items-center">
-              <div className="relative">
-                <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-lg">
+            <div className="userinfo-image-section">
+              <div className="userinfo-image-wrapper">
+                <div className="userinfo-image-border">
                   {userImage ? (
                     <img
                       src={userImage}
                       alt={name}
-                      className="w-full h-full object-cover"
+                      className="userinfo-image"
                     />
                   ) : (
-                    <div className="w-full h-full bg-indigo-100 flex items-center justify-center">
+                    <div className="userinfo-image-placeholder">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="h-16 w-16 text-indigo-300"
+                        className="userinfo-image-icon"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -66,15 +67,13 @@ const UserInfo = ({
                     </div>
                   )}
                 </div>
-                <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-indigo-600 text-white px-3 py-1 rounded-full text-xs font-medium">
-                  {name}
-                </div>
+                <div className="userinfo-image-name">{name}</div>
               </div>
             </div>
 
             {/* User Details Section */}
-            <div className="flex-grow">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="userinfo-details-section">
+              <div className="userinfo-details-grid">
                 <InfoCard
                   title="اطلاعات شخصی"
                   items={[
@@ -82,7 +81,7 @@ const UserInfo = ({
                       icon: (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          className="h-5 w-5"
+                          className="userinfo-icon"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -97,13 +96,13 @@ const UserInfo = ({
                       ),
                       label: "قد",
                       value: `${height} سانتی‌متر`,
-                      color: "text-blue-600",
+                      color: "rgb(86, 119, 188)",
                     },
                     {
                       icon: (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          className="h-5 w-5"
+                          className="userinfo-icon"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -118,7 +117,7 @@ const UserInfo = ({
                       ),
                       label: "وزن",
                       value: `${weight} کیلوگرم`,
-                      color: "text-green-600",
+                      color: "rgb(86, 119, 188)",
                     },
                   ]}
                 />
@@ -130,7 +129,7 @@ const UserInfo = ({
                       icon: (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          className="h-5 w-5"
+                          className="userinfo-icon"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -147,13 +146,13 @@ const UserInfo = ({
                       value: trainingSystem
                         ? getTrainingSystemLabel(trainingSystem)
                         : "-",
-                      color: "text-purple-600",
+                      color: "rgb(86, 119, 188)",
                     },
                     {
                       icon: (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          className="h-5 w-5"
+                          className="userinfo-icon"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -168,7 +167,7 @@ const UserInfo = ({
                       ),
                       label: "هدف",
                       value: purpose ? getPurposeLabel(purpose) : "-",
-                      color: "text-amber-600",
+                      color: "rgb(86, 119, 188)",
                     },
                   ]}
                 />
@@ -178,12 +177,12 @@ const UserInfo = ({
 
           {/* Description Section */}
           {description && (
-            <div className="mt-6">
-              <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                <div className="flex items-center gap-2 mb-3">
+            <div style={{ direction: "rtl" }} className="userinfo-description-section">
+              <div className="userinfo-description-box">
+                <div className="userinfo-description-header">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5 text-indigo-600"
+                    className="userinfo-description-icon"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -195,13 +194,9 @@ const UserInfo = ({
                       d="M4 6h16M4 12h16M4 18h7"
                     />
                   </svg>
-                  <h3 className="text-sm font-semibold text-gray-600">
-                    توضیحات
-                  </h3>
+                  <h3 className="userinfo-description-title ">توضیحات</h3>
                 </div>
-                <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">
-                  {description}
-                </p>
+                <p className="userinfo-description-text text-right">{description}</p>
               </div>
             </div>
           )}
@@ -222,19 +217,18 @@ interface InfoCardProps {
 }
 
 const InfoCard = ({ title, items }: InfoCardProps) => (
-  <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-    <h3 className="text-sm font-semibold text-gray-600 mb-3">{title}</h3>
-    <div className="space-y-3">
+  <div className="userinfo-infocard">
+    <h3 className="userinfo-infocard-title">{title}</h3>
+    <div className="userinfo-infocard-items">
       {items.map((item, index) => (
-        <div key={index} className="flex items-center gap-3">
-          <span
-            className={`p-2 rounded-lg bg-opacity-10 ${item.color} bg-current`}
-          >
-            {item.icon}
-          </span>
-          <div className="flex-grow">
-            <div className="text-xs text-gray-500">{item.label}</div>
-            <div className={`text-sm font-medium ${item.color}`}>
+        <div key={index} className="userinfo-infocard-item">
+          <span className="userinfo-infocard-icon">{item.icon}</span>
+          <div className="userinfo-infocard-labels">
+            <div className="userinfo-infocard-label">{item.label}</div>
+            <div
+              className="userinfo-infocard-value"
+              style={{ color: item.color }}
+            >
               {item.value}
             </div>
           </div>
