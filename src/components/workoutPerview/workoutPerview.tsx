@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import type { DayWorkout } from "../../store/workoutStore";
 import UserInfo from "./components/UserInfo";
 import WorkoutDay from "./components/WorkoutDay";
-import PDFGenerator from "./components/PDFGenerator";
 
 interface WorkoutProgramPreviewProps {
   programName: string;
