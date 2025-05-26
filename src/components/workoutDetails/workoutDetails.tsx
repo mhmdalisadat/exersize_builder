@@ -1,16 +1,13 @@
 import { motion } from "framer-motion";
 import React from "react";
-import type { WorkoutDetailsPropsType } from "../../types";
 import FormField from "./formfield";
 import { purposeOptions, trainingSystemOptions } from "../../constants";
+import { useWorkoutStore } from "../../store/workoutStore";
+import { animations } from "../../animation/program_animate";
 
-const WorkoutDetails: React.FC<WorkoutDetailsPropsType> = ({
-  workoutData,
-  handleInputChange,
-  handleNextStep,
-  validateStep1,
-  animations,
-}) => {
+const WorkoutDetails: React.FC = () => {
+  const { workoutData, setWorkoutData, setCurrentStep } = useWorkoutStore();
+
   const formfields = [
     {
       label: "اسم",
@@ -91,10 +88,31 @@ const WorkoutDetails: React.FC<WorkoutDetailsPropsType> = ({
     (field) => field.section === "program"
   );
 
+  const handleInputChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const { name, value } = e.target;
+    setWorkoutData({ [name]: value });
+  };
+
   const handleImageChange = (img: string) => {
-    handleInputChange({
-      target: { name: "userImage", value: img },
-    } as React.ChangeEvent<HTMLInputElement>);
+    setWorkoutData({ userImage: img });
+  };
+
+  const validateStep1 = (): boolean => {
+    return Boolean(
+      workoutData.programName &&
+        workoutData.daysPerWeek &&
+        parseInt(workoutData.daysPerWeek) > 0
+    );
+  };
+
+  const handleNextStep = () => {
+    if (validateStep1()) {
+      setCurrentStep(1);
+    }
   };
 
   return (

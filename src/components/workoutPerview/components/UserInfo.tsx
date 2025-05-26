@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import "./UserInfo.css";
+import { User, Scale, BarChart3, Zap, AlignLeft } from "lucide-react";
 
 interface UserInfoProps {
   name: string;
@@ -28,96 +28,55 @@ const UserInfo = ({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="userinfo-root"
+      className="w-full max-w-2xl mx-auto mb-4 sm:mb-8"
     >
-      <div className="userinfo-container">
-        {/* Header with solid background */}
-        <div className="userinfo-header">
-          <h2 className="userinfo-title">مشخصات</h2>
+      <div className="bg-gradient-to-br from-[#5677BC]/10 to-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border border-[#5677BC]/20">
+        {/* Header with gradient background */}
+        <div className="bg-gradient-to-r from-[#5677BC] to-[#5677BC]/90 p-3 sm:p-4 text-white">
+          <h2 className="text-lg sm:text-xl font-bold text-center">مشخصات</h2>
         </div>
 
-        <div style={{ direction: "rtl" }} className="userinfo-content">
-          <div className="userinfo-main-row">
+        <div className="p-4 sm:p-6">
+          <div className="flex flex-col md:flex-row gap-4 sm:gap-6">
             {/* User Image Section */}
-            <div className="userinfo-image-section">
-              <div className="userinfo-image-wrapper">
-                <div className="userinfo-image-border">
+            <div className="flex-shrink-0 flex flex-col items-center">
+              <div className="relative">
+                <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden border-4 border-white shadow-lg">
                   {userImage ? (
                     <img
                       src={userImage}
                       alt={name}
-                      className="userinfo-image"
+                      className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="userinfo-image-placeholder">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="userinfo-image-icon"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                        />
-                      </svg>
+                    <div className="w-full h-full bg-[#5677BC]/10 flex items-center justify-center">
+                      <User className="h-12 w-12 sm:h-16 sm:w-16 text-[#5677BC]/40" />
                     </div>
                   )}
                 </div>
-                <div className="userinfo-image-name">{name}</div>
+                <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-[#5677BC] text-white px-2 sm:px-3 py-1 rounded-full text-xs truncate max-w-[100px] font-medium">
+                  {name}
+                </div>
               </div>
             </div>
 
             {/* User Details Section */}
-            <div className="userinfo-details-section">
-              <div className="userinfo-details-grid">
+            <div className="flex-grow">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <InfoCard
                   title="اطلاعات شخصی"
                   items={[
                     {
-                      icon: (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="userinfo-icon"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                          />
-                        </svg>
-                      ),
+                      icon: <User className="h-4 w-4 sm:h-5 sm:w-5 text-white" />,
                       label: "قد",
                       value: `${height} سانتی‌متر`,
-                      color: "rgb(86, 119, 188)",
+                      color: "text-[#5677BC]",
                     },
                     {
-                      icon: (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="userinfo-icon"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"
-                          />
-                        </svg>
-                      ),
+                      icon: <Scale className="h-4 w-4 sm:h-5 sm:w-5 text-white" />,
                       label: "وزن",
                       value: `${weight} کیلوگرم`,
-                      color: "rgb(86, 119, 188)",
+                      color: "text-[#5677BC]",
                     },
                   ]}
                 />
@@ -126,48 +85,18 @@ const UserInfo = ({
                   title="اطلاعات تمرین"
                   items={[
                     {
-                      icon: (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="userinfo-icon"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                          />
-                        </svg>
-                      ),
+                      icon: <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5 text-white" />,
                       label: "سیستم تمرینی",
                       value: trainingSystem
                         ? getTrainingSystemLabel(trainingSystem)
                         : "-",
-                      color: "rgb(86, 119, 188)",
+                      color: "text-[#5677BC]",
                     },
                     {
-                      icon: (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="userinfo-icon"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M13 10V3L4 14h7v7l9-11h-7z"
-                          />
-                        </svg>
-                      ),
+                      icon: <Zap className="h-4 w-4 sm:h-5 sm:w-5 text-white" />,
                       label: "هدف",
                       value: purpose ? getPurposeLabel(purpose) : "-",
-                      color: "rgb(86, 119, 188)",
+                      color: "text-[#5677BC]",
                     },
                   ]}
                 />
@@ -177,26 +106,17 @@ const UserInfo = ({
 
           {/* Description Section */}
           {description && (
-            <div style={{ direction: "rtl" }} className="userinfo-description-section">
-              <div className="userinfo-description-box">
-                <div className="userinfo-description-header">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="userinfo-description-icon"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 6h16M4 12h16M4 18h7"
-                    />
-                  </svg>
-                  <h3 className="userinfo-description-title ">توضیحات</h3>
+            <div className="mt-4 sm:mt-6">
+              <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 shadow-sm border border-[#5677BC]/20">
+                <div className="flex items-center gap-2 mb-2 sm:mb-3">
+                  <AlignLeft className="h-4 w-4 sm:h-5 sm:w-5 text-[#5677BC]" />
+                  <h3 className="text-xs sm:text-sm font-semibold text-gray-600">
+                    توضیحات
+                  </h3>
                 </div>
-                <p className="userinfo-description-text text-right">{description}</p>
+                <p className="text-gray-700 text-xs sm:text-sm leading-relaxed whitespace-pre-line">
+                  {description}
+                </p>
               </div>
             </div>
           )}
@@ -217,18 +137,21 @@ interface InfoCardProps {
 }
 
 const InfoCard = ({ title, items }: InfoCardProps) => (
-  <div className="userinfo-infocard">
-    <h3 className="userinfo-infocard-title">{title}</h3>
-    <div className="userinfo-infocard-items">
+  <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 shadow-sm border border-[#5677BC]/20">
+    <h3 className="text-xs sm:text-sm font-semibold text-gray-600 mb-2 sm:mb-3">
+      {title}
+    </h3>
+    <div className="space-y-2 sm:space-y-3">
       {items.map((item, index) => (
-        <div key={index} className="userinfo-infocard-item">
-          <span className="userinfo-infocard-icon">{item.icon}</span>
-          <div className="userinfo-infocard-labels">
-            <div className="userinfo-infocard-label">{item.label}</div>
-            <div
-              className="userinfo-infocard-value"
-              style={{ color: item.color }}
-            >
+        <div key={index} className="flex items-center gap-2 sm:gap-3">
+          <span
+            className={`flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-opacity-100 ${item.color} bg-current`}
+          >
+            {item.icon}
+          </span>
+          <div className="flex-grow">
+            <div className="text-xs text-gray-500">{item.label}</div>
+            <div className={`text-xs sm:text-sm font-medium ${item.color}`}>
               {item.value}
             </div>
           </div>

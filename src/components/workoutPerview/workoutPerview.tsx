@@ -1,42 +1,58 @@
 import { motion } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 // @ts-expect-error: No types for html2pdf.js
 import html2pdf from "html2pdf.js";
-import type { DayWorkout } from "../../store/workoutStore";
 import UserInfo from "./components/UserInfo";
 import WorkoutDay from "./components/WorkoutDay";
+import { useWorkoutStore } from "../../store/workoutStore";
+import { muscleOptions } from "../../constants";
+import { useCreateWorkout } from "../../hooks/useCreate";
 
-interface WorkoutProgramPreviewProps {
-  programName: string;
-  description: string;
-  dayWorkouts: DayWorkout[];
-  getMuscleLabel: (value: string) => string;
-  onBack: () => void;
-  name: string;
-  height: string;
-  weight: string;
-  trainingSystem?: string;
-  getTrainingSystemLabel: (system: string) => string;
-  purpose: string;
-  getPurposeLabel: (purpose: string) => string;
-  userImage?: string;
-}
-
-const WorkoutPerview = ({
-  description,
-  dayWorkouts,
-  getMuscleLabel,
-  onBack,
-  name,
-  height,
-  weight,
-  trainingSystem,
-  getTrainingSystemLabel,
-  purpose,
-  getPurposeLabel,
-  userImage,
-}: WorkoutProgramPreviewProps) => {
+const WorkoutPerview = () => {
   const previewRef = useRef<HTMLDivElement>(null);
+  const { mutate: createWorkout, isPending: isCreating } = useCreateWorkout();
+  const { workoutData, dayWorkouts, setCurrentStep } = useWorkoutStore();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const getMuscleLabel = (value: string) => {
+    const option = muscleOptions.find((opt) => opt.value === value);
+    return option ? option.label : value;
+  };
+
+  const getTrainingSystemLabel = (system: string) => {
+    switch (system) {
+      case "fullbody":
+        return "فول‌بادی";
+      case "split":
+        return "اسپلیت";
+      case "upper-lower":
+        return "بالا/پایین‌تنه";
+      case "push-pull-legs":
+        return "پوش/پول/لگ";
+      case "custom":
+        return "سفارشی";
+      default:
+        return system;
+    }
+  };
+
+  const getPurposeLabel = (purpose: string) => {
+    switch (purpose) {
+      case "weight-loss":
+        return "کاهش وزن";
+      case "muscle-gain":
+        return "افزایش حجم عضلات";
+      case "strength":
+        return "افزایش قدرت";
+      case "endurance":
+        return "افزایش استقامت";
+      case "general-fitness":
+        return "تناسب اندام عمومی";
+      default:
+        return purpose;
+    }
+  };
 
   const convertColors = () => {
     const elements = document.querySelectorAll("*");
@@ -86,6 +102,47 @@ const WorkoutPerview = ({
     }
   };
 
+  const handleBack = () => {
+    setCurrentStep(2);
+  };
+
+  const handleSubmit = async () => {
+    try {
+      setIsSubmitting(true);
+      setError(null);
+
+      // Create the workout data object
+      const workoutPayload = {
+        ...workoutData,
+        dayWorkouts: dayWorkouts.map((day) => ({
+          ...day,
+          exercises: day.exercises.map((exercise) => ({
+            ...exercise,
+            sets: exercise.sets,
+            reps: exercise.reps,
+            setConfig: {
+              ...exercise.setConfig,
+              weight: exercise.setConfig.weight,
+              targetReps: Number(exercise.setConfig.targetReps),
+              targetSets: Number(exercise.setConfig.targetSets),
+              restTime: Number(exercise.setConfig.restTime),
+            },
+          })),
+        })),
+      };
+
+      // Use the createWorkout mutation
+      await createWorkout(workoutPayload);
+
+      // If successful, reset to first step
+      setCurrentStep(1);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "خطا در ثبت برنامه");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <motion.div
       dir="rtl"
@@ -110,14 +167,14 @@ const WorkoutPerview = ({
         <div data-rtl-pdf>
           {/* User Information */}
           <UserInfo
-            name={name}
-            description={description}
-            userImage={userImage}
-            height={height}
-            weight={weight}
-            trainingSystem={trainingSystem}
+            name={workoutData.name}
+            description={workoutData.description}
+            userImage={workoutData.userImage}
+            height={workoutData.height}
+            weight={workoutData.weight}
+            trainingSystem={workoutData.trainingSystem}
             getTrainingSystemLabel={getTrainingSystemLabel}
-            purpose={purpose}
+            purpose={workoutData.purpose}
             getPurposeLabel={getPurposeLabel}
           />
 
@@ -136,7 +193,7 @@ const WorkoutPerview = ({
 
       <div className="flex flex-col sm:flex-row justify-between w-full max-w-xl mt-6 gap-2 print:hidden">
         <motion.button
-          onClick={onBack}
+          onClick={handleBack}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           className="px-4 py-1.5 text-sm rounded hover:bg-gray-200 transition-colors"
@@ -144,33 +201,86 @@ const WorkoutPerview = ({
         >
           بازگشت
         </motion.button>
-        <motion.button
-          onClick={handleGeneratePDF}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          style={{
-            backgroundColor: "rgb(86, 119, 188)",
-            color: "rgb(255, 255, 255)",
-          }}
-          className="px-6 py-2 rounded-lg font-medium hover:opacity-90 transition-opacity flex items-center gap-2"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+        <div className="flex gap-2">
+          <motion.button
+            onClick={handleGeneratePDF}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            style={{
+              backgroundColor: "rgb(86, 119, 188)",
+              color: "rgb(255, 255, 255)",
+            }}
+            className="px-6 py-2 rounded-lg font-medium hover:opacity-90 transition-opacity flex items-center gap-2"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-            />
-          </svg>
-          دانلود PDF
-        </motion.button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+              />
+            </svg>
+            دانلود PDF
+          </motion.button>
+          <motion.button
+            onClick={handleSubmit}
+            disabled={isSubmitting || isCreating}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            style={{
+              backgroundColor: "rgb(34, 197, 94)",
+              color: "rgb(255, 255, 255)",
+            }}
+            className="px-6 py-2 rounded-lg font-medium hover:opacity-90 transition-opacity flex items-center gap-2 disabled:opacity-50"
+          >
+            {isSubmitting || isCreating ? (
+              <>
+                <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  />
+                </svg>
+                در حال ثبت...
+              </>
+            ) : (
+              <>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                ثبت برنامه
+              </>
+            )}
+          </motion.button>
+        </div>
       </div>
+      {error && <div className="mt-4 text-red-500 text-sm">{error}</div>}
     </motion.div>
   );
 };

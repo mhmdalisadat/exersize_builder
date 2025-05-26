@@ -1,25 +1,51 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-
 import WorkoutSummary from "./workoutSummary";
 import ExerciseEditor from "./ExerciseEditor";
 import NavigationButtons from "../navigationsButtons";
-import type { WorkoutProgramPropsType } from "../../types";
-import { animations } from "../../animation";
+import { animations } from "../../animation/program_animate";
 import { ToggleButton } from "..";
+import { useWorkoutStore } from "../../store/workoutStore";
+import { muscleOptions } from "../../constants";
+import type { ExerciseMovement } from "./ExerciseMovement";
 
-const WorkoutProgram: React.FC<WorkoutProgramPropsType> = ({
-  programName,
-  description,
-  dayWorkouts,
-  currentSelectedDay,
-  handleDaySelect,
-  handleExercisesChange,
-  getMuscleLabel,
-  goToPreviousStep,
-  onFinish,
-}) => {
+const WorkoutProgram: React.FC = () => {
   const [showSummary, setShowSummary] = useState(false);
+  const {
+    workoutData,
+    dayWorkouts,
+    currentSelectedDay,
+    setCurrentSelectedDay,
+    updateDayWorkout,
+    setCurrentStep,
+  } = useWorkoutStore();
+
+  const handleDaySelect = (day: number) => {
+    setCurrentSelectedDay(day);
+  };
+
+  const handleExercisesChange = (exercises: ExerciseMovement[]) => {
+    const dayWorkout = dayWorkouts.find((d) => d.day === currentSelectedDay);
+    if (dayWorkout) {
+      updateDayWorkout({
+        ...dayWorkout,
+        exercises,
+      });
+    }
+  };
+
+  const getMuscleLabel = (value: string) => {
+    const option = muscleOptions.find((opt) => opt.value === value);
+    return option ? option.label : value;
+  };
+
+  const goToPreviousStep = () => {
+    setCurrentStep(1);
+  };
+
+  const handleFinish = () => {
+    setCurrentStep(3);
+  };
 
   return (
     <motion.div
@@ -51,8 +77,8 @@ const WorkoutProgram: React.FC<WorkoutProgramPropsType> = ({
 
           {showSummary ? (
             <WorkoutSummary
-              programName={programName}
-              description={description}
+              programName={workoutData.programName}
+              description={workoutData.description}
               dayWorkouts={dayWorkouts}
               getMuscleLabel={getMuscleLabel}
             />
@@ -71,7 +97,7 @@ const WorkoutProgram: React.FC<WorkoutProgramPropsType> = ({
         <div className="flex flex-col sm:flex-row gap-3 mt-4">
           <NavigationButtons
             onPrevious={goToPreviousStep}
-            onNext={onFinish}
+            onNext={handleFinish}
             isNextDisabled={false}
             variants={animations.button}
             nextButtonText="پایان و ذخیره"
