@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
 import React from "react";
-import FormField from "./formfield";
-import { purposeOptions, trainingSystemOptions } from "../../constants";
-import { useWorkoutStore } from "../../store/workoutStore";
-import { animations } from "../../animation/program_animate";
+import { FormField } from "../../common";
+import { purposeOptions, trainingSystemOptions } from "../../../constants";
+import { useWorkoutStore } from "../../../store";
+import { animations } from "../../../animation";
 
 const WorkoutDetails: React.FC = () => {
   const { workoutData, setWorkoutData, setCurrentStep } = useWorkoutStore();

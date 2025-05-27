@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import type { NavigationButtonsPropsType } from "../types";
+import type { NavigationButtonsPropsType } from "../../types";
 
 const NavigationButtons: React.FC<NavigationButtonsPropsType> = ({
   onPrevious,

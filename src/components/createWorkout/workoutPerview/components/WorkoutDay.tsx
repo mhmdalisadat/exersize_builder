@@ -1,4 +1,4 @@
-import type { DayWorkout } from "../../../store/workoutStore";
+import type { DayWorkout } from "../../../../store";
 import { motion } from "framer-motion";
 
 interface WorkoutDayProps {

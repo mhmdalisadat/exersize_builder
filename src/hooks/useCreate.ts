@@ -1,8 +1,15 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, type UseMutationResult } from "@tanstack/react-query";
 import { createWorkout } from "../services/createWorkout";
+import type { WorkoutCreateResponse, WorkoutProgram } from "../types";
 
-export const useCreateWorkout = () => {
+const useCreateWorkout = (): UseMutationResult<
+  WorkoutCreateResponse,
+  Error,
+  WorkoutProgram
+> => {
   return useMutation({
-    mutationFn: (workout: any) => createWorkout(workout),
+    mutationKey: ["createWorkout"],
+    mutationFn: (workout: WorkoutProgram) => createWorkout(workout),
   });
 };
+export default useCreateWorkout;

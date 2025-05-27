@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { ExerciseMovement } from "../components/workoutProgram/ExerciseMovement";
+import type { ExerciseMovement } from "../components/createWorkout/workoutProgram/ExerciseMovement";
 
 export interface DayWorkout {
   day: number;

@@ -1,6 +1,6 @@
 import type { DayCardPropsType } from "../../types";
 import { motion } from "framer-motion";
-import MultiSelectMuscle from "./MultiSelectMuscle";
+import MultiSelectMuscle from "../createWorkout/workoutMuscleDays/MultiSelectMuscle";
 
 export const DayCard: React.FC<DayCardPropsType> = ({
   day,

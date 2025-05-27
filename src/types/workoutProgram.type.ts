@@ -1,4 +1,4 @@
-import type { ExerciseMovement } from "../components/workoutProgram/ExerciseMovement";
+import type { ExerciseMovement } from "../components/createWorkout/workoutProgram/ExerciseMovement";
 import type { DayWorkout } from "../store/workoutStore";
 
 export interface WorkoutProgramPropsType {

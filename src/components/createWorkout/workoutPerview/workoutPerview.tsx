@@ -1,17 +1,19 @@
 import { motion } from "framer-motion";
 import { useRef, useState } from "react";
-// @ts-expect-error: No types for html2pdf.js
-import html2pdf from "html2pdf.js";
+import toast from "react-hot-toast";
 import UserInfo from "./components/UserInfo";
 import WorkoutDay from "./components/WorkoutDay";
-import { useWorkoutStore } from "../../store/workoutStore";
-import { muscleOptions } from "../../constants";
-import { useCreateWorkout } from "../../hooks/useCreate";
+import { useWorkoutStore } from "../../../store";
+import { muscleOptions } from "../../../constants";
+import { useCreateWorkout } from "../../../hooks";
+import type { WorkoutCreateResponse } from "../../../types";
 
 const WorkoutPerview = () => {
   const previewRef = useRef<HTMLDivElement>(null);
-  const { mutate: createWorkout, isPending: isCreating } = useCreateWorkout();
-  const { workoutData, dayWorkouts, setCurrentStep } = useWorkoutStore();
+  const { mutateAsync: createWorkout, isPending: isCreating } =
+    useCreateWorkout();
+  const { workoutData, dayWorkouts, setCurrentStep, resetWorkoutData } =
+    useWorkoutStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -54,54 +56,6 @@ const WorkoutPerview = () => {
     }
   };
 
-  const convertColors = () => {
-    const elements = document.querySelectorAll("*");
-    elements.forEach((el) => {
-      const style = window.getComputedStyle(el);
-      if (style.color.includes("oklch")) {
-        (el as HTMLElement).style.color = "rgb(0, 0, 0)";
-      }
-      if (style.backgroundColor.includes("oklch")) {
-        (el as HTMLElement).style.backgroundColor = "rgb(255, 255, 255)";
-      }
-    });
-  };
-
-  const handleGeneratePDF = async () => {
-    try {
-      console.log("شروع تولید PDF");
-      convertColors();
-
-      const element = previewRef.current;
-      if (!element) {
-        throw new Error("عنصر پیش‌نمایش یافت نشد");
-      }
-
-      // اضافه کردن کلاس مخصوص PDF
-      element.classList.add("pdf-export");
-
-      await html2pdf()
-        .set({
-          margin: [10, 10, 10, 10],
-          filename: "workout-plan.pdf",
-          image: { type: "jpeg", quality: 0.98 },
-          html2canvas: { scale: 2, useCORS: true },
-          jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-          pagebreak: { mode: ["css", "legacy"] },
-        })
-        .from(element)
-        .save();
-
-      // حذف کلاس بعد از تولید PDF
-      element.classList.remove("pdf-export");
-      console.log("PDF با موفقیت تولید شد");
-    } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error ? error.message : "خطای ناشناخته";
-      console.error(`خطا در تولید PDF: ${errorMessage}`);
-    }
-  };
-
   const handleBack = () => {
     setCurrentStep(2);
   };
@@ -114,8 +68,9 @@ const WorkoutPerview = () => {
       // Create the workout data object
       const workoutPayload = {
         ...workoutData,
-        dayWorkouts: dayWorkouts.map((day) => ({
-          ...day,
+        days: dayWorkouts.map((day) => ({
+          day: day.day,
+          targetMuscles: day.targetMuscles,
           exercises: day.exercises.map((exercise) => ({
             ...exercise,
             sets: exercise.sets,
@@ -132,12 +87,27 @@ const WorkoutPerview = () => {
       };
 
       // Use the createWorkout mutation
-      await createWorkout(workoutPayload);
+      const response = (await createWorkout(
+        workoutPayload
+      )) as unknown as WorkoutCreateResponse;
+
+      // Show success toast with the message from the response
+      if (response?.success && response?.message) {
+        toast.success(response.message);
+      } else {
+        toast.success("برنامه تمرینی با موفقیت ثبت شد");
+      }
+
+      // Reset store data after successful submission
+      resetWorkoutData();
 
       // If successful, reset to first step
       setCurrentStep(1);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "خطا در ثبت برنامه");
+      const errorMessage =
+        err instanceof Error ? err.message : "خطا در ثبت برنامه";
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -152,10 +122,6 @@ const WorkoutPerview = () => {
       exit={{ opacity: 0, y: -20 }}
       className="w-full min-h-screen flex flex-col items-center bg-white print:bg-white px-2 sm:px-0"
     >
-      <div className="sm:hidden text-center text-xs text-slate-500 mb-2">
-        برای مشاهده کامل پیش‌نمایش، به چپ و راست اسکرول کنید
-      </div>
-
       <div ref={previewRef} className="w-full max-w-4xl px-4 sm:px-6 mb-8">
         {/* Force RTL direction for PDF and screen */}
         <style>{`
@@ -202,32 +168,6 @@ const WorkoutPerview = () => {
           بازگشت
         </motion.button>
         <div className="flex gap-2">
-          <motion.button
-            onClick={handleGeneratePDF}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            style={{
-              backgroundColor: "rgb(86, 119, 188)",
-              color: "rgb(255, 255, 255)",
-            }}
-            className="px-6 py-2 rounded-lg font-medium hover:opacity-90 transition-opacity flex items-center gap-2"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-              />
-            </svg>
-            دانلود PDF
-          </motion.button>
           <motion.button
             onClick={handleSubmit}
             disabled={isSubmitting || isCreating}

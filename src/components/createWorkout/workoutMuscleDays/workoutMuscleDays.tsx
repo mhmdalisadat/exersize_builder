@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
 import React from "react";
-import { NavigationButtons, DayCard } from "..";
-import { useWorkoutStore } from "../../store/workoutStore";
-import { animations } from "../../animation/program_animate";
-import { muscleOptions } from "../../constants";
+import { NavigationButtons, DayCard } from "../..";
+import { useWorkoutStore } from "../../../store/workoutStore";
+import { animations } from "../../../animation";
+import { muscleOptions } from "../../../constants";
 
 const WorkoutMuscleDays: React.FC = () => {
   const { dayWorkouts, updateDayWorkout, setCurrentStep } = useWorkoutStore();

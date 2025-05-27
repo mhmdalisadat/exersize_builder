@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { MobileStepper, Stepper } from "../stepper";
-import type { Step } from "../stepper/types";
+import {} from "../components";
+import type { Step } from "../components";
 import { useWorkoutStore } from "../store";
 import { motion } from "framer-motion";
 import {
@@ -8,6 +8,8 @@ import {
   WorkoutMuscleDays,
   WorkoutProgram,
   WorkoutPerview,
+  MobileStepper,
+  Stepper,
 } from "../components";
 
 const Workout = () => {
@@ -114,7 +116,7 @@ const Workout = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          برنامه تمرینی
+          تنظیم برنامه تمرینی
         </motion.h1>
         <motion.div
           className="bg-white rounded-xl shadow-lg p-8 border border-blue-100"

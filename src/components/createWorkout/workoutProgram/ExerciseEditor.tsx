@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import ExerciseList from "./ExerciseList";
 import type { ExerciseMovement } from "./ExerciseMovement";
-import type { DayWorkout } from "../../store/workoutStore";
+import type { DayWorkout } from "../../../store/workoutStore";
 
 interface ExerciseEditorProps {
   dayWorkouts: DayWorkout[];

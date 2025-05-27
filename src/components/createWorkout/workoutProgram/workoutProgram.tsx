@@ -2,11 +2,10 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import WorkoutSummary from "./workoutSummary";
 import ExerciseEditor from "./ExerciseEditor";
-import NavigationButtons from "../navigationsButtons";
-import { animations } from "../../animation/program_animate";
-import { ToggleButton } from "..";
-import { useWorkoutStore } from "../../store/workoutStore";
-import { muscleOptions } from "../../constants";
+import { animations } from "../../../animation";
+import { ToggleButton, NavigationButtons } from "../../common";
+import { useWorkoutStore } from "../../../store";
+import { muscleOptions } from "../../../constants";
 import type { ExerciseMovement } from "./ExerciseMovement";
 
 const WorkoutProgram: React.FC = () => {
