@@ -23,8 +23,8 @@ jobs:
 
             # Navigate to project directory
             cd /var/www/fit/cli
-
-            echo "Pulling latest changes..."
+            git reset --hard HEAD
+            git clean -fd
             git pull origin main || { echo "Git pull failed"; exit 1; }
 
             echo "Building and updating frontend container..."
