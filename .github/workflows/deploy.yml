@@ -1,4 +1,4 @@
-name: Deploy to Ubuntu Server
+name: Deploy Frontend to Ubuntu Server
 
 on:
   push:
@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: SSH and Deploy
+      - name: SSH and Deploy Frontend
         uses: appleboy/ssh-action@master
         with:
           host: ${{secrets.SERVER_HOST}}
@@ -19,38 +19,19 @@ jobs:
           key: ${{secrets.SSH_PRIVATE_KEY}}
           port: ${{secrets.SSH_PORT}}
           script: |
-            echo "Starting deployment..."
+            echo "Starting frontend deployment..."
 
-            # پاک کردن کامل دایرکتوری قبلی
-            cd /var/www/
-            rm -rf downSite
-            mkdir -p downSite
-            cd downSite
+            # Navigate to project directory
+            cd /var/www/fit/cli
 
-            echo "Cloning fresh repository..."
-            git clone --depth 1 https://github.com/mhmdalisadat/exersize_builder.git . || { echo "Git clone failed"; exit 1; }
+            echo "Pulling latest changes..."
+            git pull origin main || { echo "Git pull failed"; exit 1; }
 
-            echo "Installing dependencies..."
-            rm -rf node_modules package-lock.json
-            npm install || { echo "npm install failed"; exit 1; }
+            echo "Building and updating frontend container..."
+            docker-compose build frontend
+            docker-compose up -d --no-deps frontend
 
-            echo "Installing Rollup..."
-            npm install rollup || { echo "Rollup install failed"; exit 1; }
+            echo "Checking frontend container status..."
+            docker-compose ps frontend
 
-            echo "Building project..."
-            npm run build || { echo "Build failed"; exit 1; }
-
-            if [ ! -d "dist" ] || [ ! -f "dist/index.html" ]; then
-              echo "Error: dist folder or index.html not found"
-              exit 1
-            fi
-
-            echo "Checking dist directory contents:"
-            ls -la dist/
-
-            echo "Restarting PM2 service..."
-            pm2 delete downSite || echo "No existing PM2 process found"
-            NODE_NO_WARNINGS=1 pm2 start http-server --name downSite -- /var/www/downSite/dist -p 7074 --cors || { echo "PM2 start failed"; exit 1; }
-            pm2 save || { echo "PM2 save failed"; exit 1; }
-
-            echo "Deployment completed successfully"
+            echo "Frontend deployment completed successfully"
