@@ -11,4 +11,4 @@ RUN npm install -g serve
 
 EXPOSE 7074
 
-CMD ["serve", "-s", "build", "-l", "7074"]
+CMD ["serve", "-s", "dist", "-l", "7074"]
