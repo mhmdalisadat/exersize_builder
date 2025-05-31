@@ -1,12 +1,19 @@
 import { motion } from "framer-motion";
 import React from "react";
 import { FormField } from "../../common";
-import { purposeOptions, trainingSystemOptions } from "../../../constants";
+import {
+  purposeOptions,
+  trainingSystemOptions,
+  DIFFICULTY_LEVELS,
+  DIFFICULTY_LEVELS_TEXT,
+} from "../../../constants";
 import { useWorkoutStore } from "../../../store";
 import { animations } from "../../../animation";
+// import { useCreateWorkout } from "../../../hooks";
 
 const WorkoutDetails: React.FC = () => {
   const { workoutData, setWorkoutData, setCurrentStep } = useWorkoutStore();
+  // const { mutate: createWorkout } = useCreateWorkout();
 
   const formfields = [
     {
@@ -72,9 +79,31 @@ const WorkoutDetails: React.FC = () => {
       placeholder: "توضیحات برنامه را وارد کنید...",
       section: "program",
     },
+    {
+      label: "درجه سختی",
+      name: "difficulty",
+      value: workoutData.difficulty,
+      options: DIFFICULTY_LEVELS.map((level) => ({
+        value: level,
+        label: DIFFICULTY_LEVELS_TEXT[level],
+      })),
+      section: "program",
+    },
   ];
 
-  // Group fields by section
+  // const handleCreateWorkout = () => {
+  //   createWorkout({
+  //     workout_name: workoutData.name,
+  //     workout_description: workoutData.description,
+  //     workout_days_per_week: workoutData.daysPerWeek,
+  //     workout_difficulty: workoutData.difficulty,
+  //     workout_target_muscles: ["chest", "back", "legs", "shoulders"],
+  //     workout_equipment: ["barbell", "dumbbell"],
+  //     workout_is_public: true,
+  //     workout_tags: ["قدرتی", "حجمی", "تازه‌کار"],
+  //   });
+  // };
+  
   const personalFields = formfields.filter(
     (field) => field.section === "personal"
   );
@@ -105,13 +134,15 @@ const WorkoutDetails: React.FC = () => {
     return Boolean(
       workoutData.programName &&
         workoutData.daysPerWeek &&
-        parseInt(workoutData.daysPerWeek) > 0
+        parseInt(workoutData.daysPerWeek) > 0 &&
+        workoutData.difficulty
     );
   };
 
   const handleNextStep = () => {
     if (validateStep1()) {
       setCurrentStep(1);
+      // handleCreateWorkout();
     }
   };
 

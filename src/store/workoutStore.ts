@@ -18,7 +18,8 @@ interface WorkoutData {
   weight: string;
   trainingSystem: string;
   purpose: string;
-  userImage?: string; // base64 or URL
+  userImage?: string;
+  difficulty: string;
 }
 
 interface WorkoutStore {
@@ -66,6 +67,7 @@ const initialWorkoutData: WorkoutData = {
   trainingSystem: "",
   purpose: "",
   userImage: "",
+  difficulty: "",
 };
 
 export const useWorkoutStore = create<WorkoutStore>()(

@@ -1,12 +1,12 @@
 import { useParams } from "react-router-dom";
 import { useGetWorkout } from "../hooks";
-import { UserExercises, UserProfile } from "../components";
+import { Loader, UserExercises, UserProfile } from "../components";
 import { Instagram, MessageCircle, User as UserIcon } from "lucide-react";
 
 const UserWorkout = () => {
   const { id } = useParams();
   const { data, isLoading, error } = useGetWorkout(String(id));
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Loader />;
   if (error) return <div>Error: {error.message}</div>;
   return (
     <div className="min-h-screen flex flex-col" dir="rtl">
