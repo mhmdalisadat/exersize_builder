@@ -7,6 +7,7 @@ interface MobileStepperProps {
   onBack: () => void;
   onNext: () => void;
   validateCurrentStep: () => boolean;
+  isSubmitting?: boolean;
 }
 
 const MobileStepper = ({
@@ -15,6 +16,7 @@ const MobileStepper = ({
   onBack,
   onNext,
   validateCurrentStep,
+  isSubmitting = false,
 }: MobileStepperProps) => {
   const currentStepData = steps[currentStep];
   const isFirstStep = currentStep === 0;
@@ -45,13 +47,14 @@ const MobileStepper = ({
       </div>
 
       {/* Navigation Buttons */}
-      <div className="flex justify-between items-center gap-4">
+      <div className="flex gap-4">
         {!isFirstStep && (
           <motion.button
             onClick={onBack}
+            disabled={isSubmitting}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="flex-1 px-4 py-2.5 rounded-lg border border-gray-300 text-gray-700 font-medium"
+            className="flex-1 px-4 py-2.5 rounded-lg border border-gray-300 text-gray-700 font-medium disabled:opacity-50"
           >
             مرحله قبل
           </motion.button>
@@ -59,16 +62,24 @@ const MobileStepper = ({
         {!isLastStep && (
           <motion.button
             onClick={onNext}
-            disabled={!validateCurrentStep()}
-            whileHover={validateCurrentStep() ? { scale: 1.02 } : undefined}
-            whileTap={validateCurrentStep() ? { scale: 0.98 } : undefined}
+            disabled={!validateCurrentStep() || isSubmitting}
+            whileHover={
+              validateCurrentStep() && !isSubmitting
+                ? { scale: 1.02 }
+                : undefined
+            }
+            whileTap={
+              validateCurrentStep() && !isSubmitting
+                ? { scale: 0.98 }
+                : undefined
+            }
             className={`flex-1 px-4 py-2.5 rounded-lg font-medium ${
-              validateCurrentStep()
+              validateCurrentStep() && !isSubmitting
                 ? "bg-[#5677BC] text-white"
                 : "bg-gray-200 text-gray-500 cursor-not-allowed"
             }`}
           >
-            مرحله بعد
+            {isSubmitting ? "در حال پردازش..." : "مرحله بعد"}
           </motion.button>
         )}
       </div>

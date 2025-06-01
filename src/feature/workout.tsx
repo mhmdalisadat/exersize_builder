@@ -1,10 +1,10 @@
-import { useEffect } from "react";
-import {} from "../components";
+import { useEffect, useState } from "react";
+import { UserDetails } from "../components";
 import type { Step } from "../components";
 import { useWorkoutStore } from "../store";
 import { motion } from "framer-motion";
 import {
-  WorkoutDetails,
+  WorkoutCreate,
   WorkoutMuscleDays,
   WorkoutProgram,
   WorkoutPerview,
@@ -13,6 +13,9 @@ import {
 } from "../components";
 
 const Workout = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const {
     workoutData,
     dayWorkouts,
@@ -21,15 +24,15 @@ const Workout = () => {
     removeDayWorkout,
     currentStep,
     goToStep,
-    goToNextStep,
     goToPreviousStep,
     validateStep1,
     validateStep2,
     validateCurrentStep,
+    submitWorkout,
   } = useWorkoutStore();
 
   useEffect(() => {
-    const daysCount = parseInt(workoutData.daysPerWeek) || 0;
+    const daysCount = parseInt(workoutData.workout_days_per_week) || 0;
 
     // Remove extra days if daysPerWeek is reduced
     if (daysCount < dayWorkouts.length) {
@@ -53,7 +56,7 @@ const Workout = () => {
       }
     }
   }, [
-    workoutData.daysPerWeek,
+    workoutData.workout_days_per_week,
     dayWorkouts,
     addDayWorkout,
     updateDayWorkout,
@@ -64,15 +67,35 @@ const Workout = () => {
     goToStep(index);
   };
 
+  const handleSubmit = async () => {
+    if (!validateCurrentStep()) {
+      return;
+    }
+
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      await submitWorkout();
+      // The store will handle navigation to the next step
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An error occurred");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const renderCurrentStepContent = () => {
     switch (currentStep) {
       case 0:
-        return <WorkoutDetails />;
+        return <WorkoutCreate />;
       case 1:
-        return <WorkoutMuscleDays />;
+        return <UserDetails />;
       case 2:
-        return <WorkoutProgram />;
+        return <WorkoutMuscleDays />;
       case 3:
+        return <WorkoutProgram />;
+      case 4:
         return <WorkoutPerview />;
       default:
         return null;
@@ -87,10 +110,15 @@ const Workout = () => {
       validationFn: validateStep1,
     },
     {
+      title: "اطلاعات ورزشکار",
+      description: "اطلاعات ورزشکار",
+      status: "default",
+      validationFn: validateStep2,
+    },
+    {
       title: "تعیین عضلات",
       description: "برنامه‌ریزی روزانه",
       status: "default",
-      validationFn: validateStep2,
     },
     {
       title: "حرکات تمرینی",
@@ -99,7 +127,7 @@ const Workout = () => {
     },
     {
       title: "پیش‌نمایش",
-      description: "مشاهده و چاپ برنامه",
+      description: "مشاهده",
       status: "default",
     },
   ];
@@ -142,10 +170,21 @@ const Workout = () => {
               steps={steps}
               currentStep={currentStep}
               onBack={goToPreviousStep}
-              onNext={goToNextStep}
+              onNext={handleSubmit}
               validateCurrentStep={validateCurrentStep}
+              isSubmitting={isSubmitting}
             />
           </div>
+
+          {error && (
+            <motion.div
+              className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-600 text-center"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              {error}
+            </motion.div>
+          )}
 
           <div className="mt-16">{renderCurrentStepContent()}</div>
         </motion.div>

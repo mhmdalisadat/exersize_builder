@@ -10,27 +10,36 @@ export interface DayWorkout {
 }
 
 interface WorkoutData {
-  programName: string;
-  daysPerWeek: string;
-  description: string;
+  workout_name: string;
+  workout_description: string;
+  workout_days_per_week: string;
+  workout_weeks: string;
+  workout_id?: string;
+}
+
+interface UserDetails {
+  phoneNumber: string;
   name: string;
-  height: string;
-  weight: string;
-  trainingSystem: string;
-  purpose: string;
-  userImage?: string;
-  difficulty: string;
+  age: number;
+  height: number;
+  weight: number;
+  trainingExperience: string;
+  trainingGoals: string[];
+  medicalConditions: string[];
+  injuries: string[];
 }
 
 interface WorkoutStore {
   // State
   workoutData: WorkoutData;
+  userDetails: UserDetails;
   dayWorkouts: DayWorkout[];
   currentSelectedDay: number;
   currentStep: number;
 
   // Actions
   setWorkoutData: (data: Partial<WorkoutData>) => void;
+  setUserDetails: (data: Partial<UserDetails>) => void;
   setCurrentSelectedDay: (day: number) => void;
   setCurrentStep: (step: number) => void;
   addDayWorkout: (workout: DayWorkout) => void;
@@ -50,6 +59,7 @@ interface WorkoutStore {
   // Validation
   validateStep1: () => boolean;
   validateStep2: () => boolean;
+  validateStep3: () => boolean;
   validateCurrentStep: () => boolean;
 
   // Selectors
@@ -58,16 +68,23 @@ interface WorkoutStore {
 }
 
 const initialWorkoutData: WorkoutData = {
-  programName: "",
-  daysPerWeek: "",
-  description: "",
+  workout_name: "",
+  workout_description: "",
+  workout_days_per_week: "",
+  workout_weeks: "4",
+  workout_id: undefined,
+};
+
+const initialUserDetails: UserDetails = {
+  phoneNumber: "",
   name: "",
-  height: "",
-  weight: "",
-  trainingSystem: "",
-  purpose: "",
-  userImage: "",
-  difficulty: "",
+  age: 0,
+  height: 0,
+  weight: 0,
+  trainingExperience: "",
+  trainingGoals: [],
+  medicalConditions: [],
+  injuries: [],
 };
 
 export const useWorkoutStore = create<WorkoutStore>()(
@@ -75,6 +92,7 @@ export const useWorkoutStore = create<WorkoutStore>()(
     (set, get) => ({
       // State
       workoutData: initialWorkoutData,
+      userDetails: initialUserDetails,
       dayWorkouts: [],
       currentSelectedDay: 1,
       currentStep: 0,
@@ -83,6 +101,11 @@ export const useWorkoutStore = create<WorkoutStore>()(
       setWorkoutData: (data) =>
         set((state) => ({
           workoutData: { ...state.workoutData, ...data },
+        })),
+
+      setUserDetails: (data) =>
+        set((state) => ({
+          userDetails: { ...state.userDetails, ...data },
         })),
 
       setCurrentSelectedDay: (day) => set({ currentSelectedDay: day }),
@@ -144,15 +167,17 @@ export const useWorkoutStore = create<WorkoutStore>()(
       resetWorkoutData: () =>
         set({
           workoutData: initialWorkoutData,
+          userDetails: initialUserDetails,
           dayWorkouts: [],
           currentStep: 0,
         }),
 
       submitWorkout: async () => {
-        const { workoutData, dayWorkouts } = get();
+        const { workoutData, userDetails, dayWorkouts } = get();
 
         const workoutPayload = {
           ...workoutData,
+          user: userDetails,
           days: dayWorkouts.map((day) => ({
             day: day.day,
             targetMuscles: day.targetMuscles,
@@ -189,8 +214,24 @@ export const useWorkoutStore = create<WorkoutStore>()(
             throw new Error("Failed to submit workout");
           }
 
-          // Reset the store after successful submission
-          get().resetWorkoutData();
+          const data = await response.json();
+
+          // Update the workout ID in the store
+          set((state) => ({
+            workoutData: {
+              ...state.workoutData,
+              workout_id: data.workout_id,
+            },
+          }));
+
+          // Move to the next step
+          const { currentStep } = get();
+          if (currentStep < 4) {
+            // Assuming 4 is the last step
+            set({ currentStep: currentStep + 1 });
+          }
+
+          return data;
         } catch (error) {
           console.error("Error submitting workout:", error);
           throw error;
@@ -227,9 +268,9 @@ export const useWorkoutStore = create<WorkoutStore>()(
       validateStep1: () => {
         const { workoutData } = get();
         return Boolean(
-          workoutData.programName &&
-            workoutData.daysPerWeek &&
-            parseInt(workoutData.daysPerWeek) > 0
+          workoutData.workout_name &&
+            workoutData.workout_days_per_week &&
+            parseInt(workoutData.workout_days_per_week) > 0
         );
       },
 
@@ -241,13 +282,28 @@ export const useWorkoutStore = create<WorkoutStore>()(
         );
       },
 
+      validateStep3: () => {
+        const { userDetails } = get();
+        return Boolean(
+          userDetails.name &&
+            userDetails.phoneNumber &&
+            userDetails.age > 0 &&
+            userDetails.height > 0 &&
+            userDetails.weight > 0 &&
+            userDetails.trainingExperience
+        );
+      },
+
       validateCurrentStep: () => {
-        const { currentStep, validateStep1, validateStep2 } = get();
+        const { currentStep, validateStep1, validateStep2, validateStep3 } =
+          get();
         switch (currentStep) {
           case 0:
             return validateStep1();
           case 1:
             return validateStep2();
+          case 2:
+            return validateStep3();
           default:
             return true;
         }
@@ -268,6 +324,7 @@ export const useWorkoutStore = create<WorkoutStore>()(
       name: "workout-storage",
       partialize: (state) => ({
         workoutData: state.workoutData,
+        userDetails: state.userDetails,
         dayWorkouts: state.dayWorkouts,
       }),
     }

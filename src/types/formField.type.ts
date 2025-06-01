@@ -1,8 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { Variants } from "framer-motion";
+
 export interface FormFieldPropsType {
   label: string;
   name: string;
-  value: string;
+  value: string | number | string[];
   onChange: (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -10,9 +11,12 @@ export interface FormFieldPropsType {
   ) => void;
   placeholder?: string;
   type?: string;
-  options?: { value: string; label: string }[];
+  options?: Array<{
+    value: string;
+    label: string;
+  }>;
   rows?: number;
   min?: number;
   max?: number;
-  variants: any;
+  variants?: Variants;
 }
