@@ -8,7 +8,6 @@ import {
   WorkoutMuscleDays,
   WorkoutProgram,
   WorkoutPerview,
-  MobileStepper,
   Stepper,
 } from "../components";
 
@@ -25,12 +24,11 @@ const Workout = () => {
     currentStep,
     goToStep,
     goToPreviousStep,
-    validateStep1,
-    validateStep2,
     validateCurrentStep,
     submitWorkout,
   } = useWorkoutStore();
 
+  // Effect to manage workout days based on days per week
   useEffect(() => {
     const daysCount = parseInt(workoutData.workout_days_per_week) || 0;
 
@@ -41,7 +39,6 @@ const Workout = () => {
       dayWorkouts.slice(daysCount).forEach((day) => removeDayWorkout(day.id));
     }
 
-    // Add new days if needed
     if (daysCount > 0) {
       for (let i = 1; i <= daysCount; i++) {
         const existingDay = dayWorkouts.find((d) => d.day === i);
@@ -77,7 +74,6 @@ const Workout = () => {
 
     try {
       await submitWorkout();
-      // The store will handle navigation to the next step
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
@@ -107,13 +103,11 @@ const Workout = () => {
       title: "اطلاعات برنامه",
       description: "تعداد روزها و نام برنامه",
       status: "default",
-      validationFn: validateStep1,
     },
     {
       title: "اطلاعات ورزشکار",
       description: "اطلاعات ورزشکار",
       status: "default",
-      validationFn: validateStep2,
     },
     {
       title: "تعیین عضلات",
@@ -152,29 +146,18 @@ const Workout = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          {/* Desktop Stepper */}
-          <div className="hidden md:block">
-            <Stepper
-              steps={steps}
-              currentStep={currentStep}
-              onStepClick={handleStepClick}
-              size="medium"
-              stepSpacing="loose"
-              orientation="horizontal"
-            />
-          </div>
-
-          {/* Mobile Stepper */}
-          <div className="md:hidden">
-            <MobileStepper
-              steps={steps}
-              currentStep={currentStep}
-              onBack={goToPreviousStep}
-              onNext={handleSubmit}
-              validateCurrentStep={validateCurrentStep}
-              isSubmitting={isSubmitting}
-            />
-          </div>
+          <Stepper
+            steps={steps}
+            currentStep={currentStep}
+            onStepClick={handleStepClick}
+            size="medium"
+            stepSpacing="loose"
+            orientation="horizontal"
+            onBack={goToPreviousStep}
+            onNext={handleSubmit}
+            validateCurrentStep={validateCurrentStep}
+            isSubmitting={isSubmitting}
+          />
 
           {error && (
             <motion.div

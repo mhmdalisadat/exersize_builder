@@ -179,25 +179,8 @@ export const useWorkoutStore = create<WorkoutStore>()(
           ...workoutData,
           user: userDetails,
           days: dayWorkouts.map((day) => ({
-            day: day.day,
-            targetMuscles: day.targetMuscles,
-            exercises: day.exercises.map((exercise) => ({
-              ...exercise,
-              setConfig: exercise.setConfig
-                ? {
-                    ...exercise.setConfig,
-                    restTime: parseInt(
-                      exercise.setConfig.restTime?.toString() || "0"
-                    ),
-                    targetReps: parseInt(
-                      exercise.setConfig.targetReps?.toString() || "0"
-                    ),
-                    targetSets: parseInt(
-                      exercise.setConfig.targetSets?.toString() || "0"
-                    ),
-                  }
-                : undefined,
-            })),
+            day_number: day.day,
+            day_muscle_groups: day.targetMuscles,
           })),
         };
 
@@ -242,6 +225,25 @@ export const useWorkoutStore = create<WorkoutStore>()(
       goToNextStep: () => {
         const { currentStep, validateCurrentStep } = get();
         if (validateCurrentStep()) {
+          // If we're on step 2 (muscle selection), submit the muscle data
+          if (currentStep === 1) {
+            const { dayWorkouts, workoutData } = get();
+            if (workoutData.workout_id) {
+              // Send muscle data to server
+              fetch("YOUR_API_ENDPOINT", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  days: dayWorkouts.map((day) => ({
+                    day_number: day.day,
+                    day_muscle_groups: day.targetMuscles,
+                  })),
+                }),
+              });
+            }
+          }
           set({ currentStep: currentStep + 1 });
         }
       },

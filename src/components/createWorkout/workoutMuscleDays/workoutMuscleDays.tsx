@@ -1,20 +1,37 @@
 import { motion } from "framer-motion";
-import React from "react";
+import React, { useState } from "react";
 import { NavigationButtons, DayCard } from "../..";
 import { useWorkoutStore } from "../../../store/workoutStore";
 import { animations } from "../../../animation";
 import { muscleOptions } from "../../../constants";
+import { useUpdateWorkout } from "../../../hooks";
 
 const WorkoutMuscleDays: React.FC = () => {
-  const { dayWorkouts, updateDayWorkout, setCurrentStep } = useWorkoutStore();
+  const { dayWorkouts, updateDayWorkout, setCurrentStep, workoutData } =
+    useWorkoutStore();
+
+  const workoutId = workoutData.workout_id;
+  const { mutate: updateWorkout } = useUpdateWorkout(workoutId || "");
+  const [pendingUpdates, setPendingUpdates] = useState<
+    Record<number, string[]>
+  >({});
 
   const handleDayMuscleChange = (day: number) => (muscles: string[]) => {
     const dayWorkout = dayWorkouts.find((d) => d.day === day);
     if (dayWorkout) {
-      updateDayWorkout({
+      const updatedDayWorkout = {
         ...dayWorkout,
         targetMuscles: muscles,
-      });
+      };
+
+      // Update local store
+      updateDayWorkout(updatedDayWorkout);
+
+      // Store the update in pendingUpdates
+      setPendingUpdates((prev) => ({
+        ...prev,
+        [day]: muscles,
+      }));
     }
   };
 
@@ -36,28 +53,37 @@ const WorkoutMuscleDays: React.FC = () => {
 
   const handleNextStep = () => {
     if (validateStep2()) {
-      setCurrentStep(2);
+      // Send all updates to the server
+      if (workoutId && Object.keys(pendingUpdates).length > 0) {
+        updateWorkout({
+          days: dayWorkouts.map((d) => ({
+            day_number: d.day,
+            day_muscle_groups: pendingUpdates[d.day] || d.targetMuscles,
+          })),
+        });
+      }
+      setCurrentStep(3);
     }
   };
 
   return (
     <motion.div
-      className="w-full flex justify-center px-4 sm:px-6 lg:px-8"
+      className="w-full flex justify-center px-2 sm:px-4 lg:px-6"
       variants={animations.container}
       initial="hidden"
       animate="visible"
       exit="exit"
     >
-      <div className="w-full max-w-4xl flex flex-col">
+      <div className="w-full max-w-3xl flex flex-col">
         <motion.h2
-          className="text-lg sm:text-xl font-bold mb-4 sm:mb-6 text-right text-indigo-700"
+          className="text-base sm:text-lg font-bold mb-2 sm:mb-4 text-right text-[#5677BC]"
           variants={animations.item}
         >
           تعیین عضلات برای هر روز
         </motion.h2>
 
         <motion.div
-          className="mb-6 sm:mb-8 space-y-4 sm:space-y-6"
+          className="mb-4 sm:mb-6 space-y-2 sm:space-y-4"
           variants={animations.item}
         >
           {dayWorkouts.map((day) => (

@@ -11,6 +11,7 @@ import {
   INJURIES,
 } from "../../../constants/enum";
 import { useUpdateWorkout } from "../../../hooks";
+import toast from "react-hot-toast";
 
 interface DropdownOption {
   value: string;
@@ -191,6 +192,7 @@ const UserDetails: React.FC = () => {
   const handleNextStep = () => {
     if (!workoutId) {
       console.error("Cannot proceed: Workout ID is missing");
+      toast.error("خطا: شناسه برنامه یافت نشد");
       return;
     }
 
@@ -211,10 +213,12 @@ const UserDetails: React.FC = () => {
         },
         {
           onSuccess: () => {
-            setCurrentStep(1);
+            setCurrentStep(2);
+            toast.success("اطلاعات ورزشکار با موفقیت ثبت شد");
           },
           onError: (error) => {
             console.error("Failed to update workout:", error);
+            toast.error("خطا در ثبت اطلاعات ورزشکار");
           },
         }
       );

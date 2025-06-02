@@ -37,4 +37,9 @@ export interface StepperProps {
   completionComponent?: ReactNode;
   showCompletionStep?: boolean;
   onComplete?: () => void;
+  // Mobile-specific props
+  onBack?: () => void;
+  onNext?: () => void;
+  validateCurrentStep?: () => boolean;
+  isSubmitting?: boolean;
 }

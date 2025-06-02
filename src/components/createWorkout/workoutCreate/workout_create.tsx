@@ -4,6 +4,7 @@ import { FormField } from "../../common";
 import { useWorkoutStore } from "../../../store";
 import { animations } from "../../../animation";
 import { useCreateWorkout } from "../../../hooks";
+import toast from "react-hot-toast";
 
 const WorkoutCreate: React.FC = () => {
   const { workoutData, setWorkoutData, setCurrentStep } = useWorkoutStore();
@@ -60,10 +61,12 @@ const WorkoutCreate: React.FC = () => {
           if (response.success && response.data?.workout_id) {
             setWorkoutData({ workout_id: response.data.workout_id });
             setCurrentStep(1);
+            toast.success("برنامه تمرینی با موفقیت ایجاد شد");
           }
         },
         onError: (error) => {
           console.error("Failed to create workout:", error);
+          toast.error("خطا در ایجاد برنامه تمرینی");
         },
       }
     );

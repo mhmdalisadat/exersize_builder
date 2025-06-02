@@ -54,35 +54,37 @@ const Dropdown: React.FC<CustomDropdownProps> = ({
 
   return (
     <div className="relative w-full">
-      <div className="text-right mb-2 text-slate-500 font-medium">{label}</div>
+      <div className="text-right mb-1 text-[#5677BC] text-sm font-medium">
+        {label}
+      </div>
       <motion.div
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full bg-transparent py-2 px-4 border border-slate-200 rounded-md text-right cursor-pointer flex items-center justify-between hover:border-slate-400 transition"
+        className="w-full bg-white dark:bg-white py-1.5 px-3 border border-[#5677BC] rounded-md text-right cursor-pointer flex flex-row-reverse items-center justify-between hover:border-[#5677BC]/80 transition-all duration-200"
         whileHover={{ scale: 1.01 }}
         whileTap={{ scale: 0.99 }}
       >
+        <ChevronDown
+          className={`w-4 h-4 text-[#5677BC] transition-transform duration-200 ${
+            isOpen ? "transform rotate-180" : ""
+          }`}
+        />
         <div className="flex-1 text-right">
           <span
             className={
               !value || (Array.isArray(value) && value.length === 0)
-                ? "text-slate-400"
-                : "text-slate-700"
+                ? "text-gray-400 text-sm"
+                : "text-[#5677BC] text-sm"
             }
           >
             {getSelectedLabels()}
           </span>
         </div>
-        <ChevronDown
-          className={`w-5 h-5 text-slate-400 transition-transform ${
-            isOpen ? "transform rotate-180" : ""
-          }`}
-        />
       </motion.div>
 
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="absolute z-10 mt-1 w-full bg-white border border-slate-200 rounded-md shadow-lg max-h-60 overflow-auto"
+            className="absolute z-10 mt-1 w-full bg-white dark:bg-white border border-[#5677BC] rounded-md shadow-lg max-h-48 overflow-auto"
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
@@ -90,34 +92,34 @@ const Dropdown: React.FC<CustomDropdownProps> = ({
             {options.map((option) => (
               <div
                 key={option.value}
-                className={`px-4 py-2 text-sm cursor-pointer hover:bg-slate-100 text-right flex justify-between items-center ${
+                className={`px-3 py-1.5 text-xs cursor-pointer hover:bg-[#5677BC]/10 text-right flex flex-row-reverse items-center gap-2 transition-colors duration-200 ${
                   (multiple &&
                     Array.isArray(value) &&
                     value.includes(option.value)) ||
                   (!multiple && value === option.value)
-                    ? "bg-slate-50"
+                    ? "bg-[#5677BC]/5"
                     : ""
                 }`}
                 onClick={() => handleSelect(option.value)}
               >
+                <span className="text-[#5677BC] flex-1">{option.label}</span>
                 <div
-                  className={`h-4 w-4 rounded-sm border ${
+                  className={`h-3.5 w-3.5 rounded-sm border transition-colors duration-200 flex-shrink-0 ${
                     (multiple &&
                       Array.isArray(value) &&
                       value.includes(option.value)) ||
                     (!multiple && value === option.value)
-                      ? "bg-indigo-500 border-indigo-500"
-                      : "border-gray-300"
+                      ? "bg-[#5677BC] border-[#5677BC]"
+                      : "border-[#5677BC]"
                   } flex items-center justify-center`}
                 >
                   {((multiple &&
                     Array.isArray(value) &&
                     value.includes(option.value)) ||
                     (!multiple && value === option.value)) && (
-                    <Check className="w-3 h-3 text-white" />
+                    <Check className="w-2.5 h-2.5 text-white" />
                   )}
                 </div>
-                <span>{option.label}</span>
               </div>
             ))}
           </motion.div>
