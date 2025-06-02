@@ -76,8 +76,8 @@ const WorkoutProgram: React.FC = () => {
 
           {showSummary ? (
             <WorkoutSummary
-              programName={workoutData.programName}
-              description={workoutData.description}
+              programName={workoutData.workout_name}
+              description={workoutData.workout_description}
               dayWorkouts={dayWorkouts}
               getMuscleLabel={getMuscleLabel}
             />

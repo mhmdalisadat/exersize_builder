@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-
 import type { DayWorkout } from "../../../store/workoutStore";
 
 interface WorkoutSummaryProps {

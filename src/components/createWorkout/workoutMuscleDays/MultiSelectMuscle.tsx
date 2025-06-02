@@ -12,7 +12,7 @@ const MultiSelectMuscle: React.FC<MultiSelectMuscleProps> = ({
   onChange,
   getMuscleLabel,
 }) => {
-  const handleChange = (name: string, newValue: string | string[]) => {
+  const handleChange = ( newValue: string | string[]) => {
     if (Array.isArray(newValue)) {
       // Rest day is exclusive
       if (newValue.includes("rest")) {

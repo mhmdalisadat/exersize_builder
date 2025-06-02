@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useEffect } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import type { Step, StepperProps } from "./types/stepper.type";
 
@@ -176,16 +177,16 @@ const Stepper = ({
       )}
 
       {/* Navigation Buttons */}
-      <div className="flex gap-4">
+      <div className="flex items-center justify-between px-4">
         {!isFirstStep && (
           <motion.button
             onClick={onBack}
             disabled={isSubmitting}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="flex-1 px-4 py-2.5 rounded-lg border border-gray-300 text-gray-700 font-medium disabled:opacity-50"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="flex items-center justify-center w-12 h-12 rounded-full bg-white border-2 border-[#5677BC] text-[#5677BC] disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
           >
-            مرحله قبل
+            <ChevronRight className="w-6 h-6" />
           </motion.button>
         )}
         {!isLastStep && (
@@ -198,18 +199,18 @@ const Stepper = ({
             }}
             disabled={!validateStep() || isSubmitting}
             whileHover={
-              validateStep() && !isSubmitting ? { scale: 1.02 } : undefined
+              validateStep() && !isSubmitting ? { scale: 1.05 } : undefined
             }
             whileTap={
-              validateStep() && !isSubmitting ? { scale: 0.98 } : undefined
+              validateStep() && !isSubmitting ? { scale: 0.95 } : undefined
             }
-            className={`flex-1 px-4 py-2.5 rounded-lg font-medium ${
+            className={`flex items-center justify-center w-12 h-12 rounded-full ${
               validateStep() && !isSubmitting
                 ? "bg-[#5677BC] text-white"
                 : "bg-gray-200 text-gray-500 cursor-not-allowed"
-            }`}
+            } shadow-sm`}
           >
-            {isSubmitting ? "در حال پردازش..." : "مرحله بعد"}
+            <ChevronLeft className="w-6 h-6" />
           </motion.button>
         )}
       </div>
