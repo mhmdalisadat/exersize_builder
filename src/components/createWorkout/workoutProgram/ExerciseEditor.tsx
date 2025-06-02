@@ -53,7 +53,7 @@ const ExerciseEditor = ({
         initial="hidden"
         animate="visible"
       >
-        <div className="flex flex-col mb-4  sm:flex-row sm:items-center sm:justify-between mb-2 border-b border-gray-200 pb-2 sm:mb-4 gap-1 sm:gap-0">
+        <div className="flex flex-col mb-4  sm:flex-row sm:items-center sm:justify-between border-b border-gray-200 pb-2 sm:mb-4 gap-1 sm:gap-0">
           <h2 className="text-base sm:text-sm font-medium text-gray-700">
             روزهای تمرین
           </h2>
