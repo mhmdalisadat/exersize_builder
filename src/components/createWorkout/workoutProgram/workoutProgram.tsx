@@ -1,17 +1,13 @@
-import { useState } from "react";
 import { motion } from "framer-motion";
-import WorkoutSummary from "./workoutSummary";
-import ExerciseEditor from "./ExerciseEditor";
-import { animations } from "../../../animation";
-import { ToggleButton, NavigationButtons } from "../../common";
+import WorkoutDefine from "./workoutDefine";
+import { NavigationButtons } from "../../common";
 import { useWorkoutStore } from "../../../store";
 import { muscleOptions } from "../../../constants";
-import type { ExerciseMovement } from "./ExerciseMovement";
+import { animations } from "../../../animation";
+import ExerciseEditor from "./movementsDays";
 
 const WorkoutProgram: React.FC = () => {
-  const [showSummary, setShowSummary] = useState(false);
   const {
-    workoutData,
     dayWorkouts,
     currentSelectedDay,
     setCurrentSelectedDay,
@@ -23,7 +19,7 @@ const WorkoutProgram: React.FC = () => {
     setCurrentSelectedDay(day);
   };
 
-  const handleExercisesChange = (exercises: ExerciseMovement[]) => {
+  const handleExercisesChange = (exercises) => {
     const dayWorkout = dayWorkouts.find((d) => d.day === currentSelectedDay);
     if (dayWorkout) {
       updateDayWorkout({
@@ -46,6 +42,8 @@ const WorkoutProgram: React.FC = () => {
     setCurrentStep(3);
   };
 
+  const currentDay = dayWorkouts.find((day) => day.day === currentSelectedDay);
+
   return (
     <motion.div
       className="w-full flex justify-center px-2 sm:px-4 lg:px-8 py-3"
@@ -55,44 +53,18 @@ const WorkoutProgram: React.FC = () => {
       exit="exit"
     >
       <div className="w-full max-w-4xl flex flex-col gap-4 sm:gap-6">
-        {/* Toggle Button */}
-        <div className="flex justify-center mb-4">
-          <ToggleButton
-            showSummary={showSummary}
-            onClick={() => setShowSummary(!showSummary)}
-          />
-        </div>
+        <ExerciseEditor
+          dayWorkouts={dayWorkouts}
+          currentSelectedDay={currentSelectedDay}
+          handleDaySelect={handleDaySelect}
+          getMuscleLabel={getMuscleLabel}
+        />
+        <WorkoutDefine
+          title="تعریف حرکات تمرینی"
+          currentDay={currentDay!}
+          onExercisesChange={handleExercisesChange}
+        />
 
-        <motion.div
-          className="flex flex-col gap-4 sm:gap-6"
-          variants={animations.item}
-        >
-          <motion.h2
-            className="text-lg sm:text-xl font-bold text-center text-indigo-700 mb-2"
-            variants={animations.item}
-          >
-            {showSummary ? "خلاصه برنامه تمرینی" : "تعریف حرکات تمرینی"}
-          </motion.h2>
-
-          {showSummary ? (
-            <WorkoutSummary
-              programName={workoutData.workout_name}
-              description={workoutData.workout_description}
-              dayWorkouts={dayWorkouts}
-              getMuscleLabel={getMuscleLabel}
-            />
-          ) : (
-            <ExerciseEditor
-              dayWorkouts={dayWorkouts}
-              currentSelectedDay={currentSelectedDay}
-              handleDaySelect={handleDaySelect}
-              handleExercisesChange={handleExercisesChange}
-              getMuscleLabel={getMuscleLabel}
-            />
-          )}
-        </motion.div>
-
-        {/* Navigation Buttons (bottom) */}
         <div className="flex flex-col sm:flex-row gap-3 mt-4">
           <NavigationButtons
             onPrevious={goToPreviousStep}

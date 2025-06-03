@@ -1,6 +1,4 @@
 import { motion } from "framer-motion";
-import ExerciseList from "./ExerciseList";
-import type { ExerciseMovement } from "./ExerciseMovement";
 import type { DayWorkout } from "../../../store/workoutStore";
 import { useRef } from "react";
 
@@ -8,15 +6,13 @@ interface ExerciseEditorProps {
   dayWorkouts: DayWorkout[];
   currentSelectedDay: number;
   handleDaySelect: (day: number) => void;
-  handleExercisesChange: (exercises: ExerciseMovement[]) => void;
   getMuscleLabel: (value: string) => string;
 }
 
-const ExerciseEditor = ({
+const MovementsDays = ({
   dayWorkouts,
   currentSelectedDay,
   handleDaySelect,
-  handleExercisesChange,
   getMuscleLabel,
 }: ExerciseEditorProps) => {
   const nonRestDays = dayWorkouts.filter(
@@ -33,36 +29,30 @@ const ExerciseEditor = ({
     },
   };
 
-  const itemVariants = {
-    hidden: { y: 10, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { duration: 0.2, ease: "easeOut" },
-    },
-  };
-
   const sliderRef = useRef<HTMLDivElement>(null);
 
   return (
     <div className="w-full max-w-3xl mx-auto px-2 sm:px-4 md:px-6 py-2">
-      {/* Unified Box */}
       <motion.div
         className="bg-white rounded-xl shadow-sm p-3 sm:p-4 mb-4 sm:mb-6"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
-        <div className="flex flex-col mb-4  sm:flex-row sm:items-center sm:justify-between border-b border-gray-200 pb-2 sm:mb-4 gap-1 sm:gap-0">
-          <h2 className="text-base sm:text-sm font-medium text-gray-700">
-            روزهای تمرین
-          </h2>
-          <span className="text-xs text-gray-500">
+        <div className="flex flex-col mb-4 sm:flex-row sm:items-center sm:justify-between border-b border-gray-200 pb-2 sm:mb-4 gap-1 sm:gap-0 px-2">
+          <div className="flex items-center justify-between w-full sm:w-auto gap-4">
+            <h2 className="text-base sm:text-sm font-medium text-gray-700">
+              روزهای تمرین
+            </h2>
+            <span className="text-xs text-gray-500 sm:hidden">
+              {nonRestDays.length} روز
+            </span>
+          </div>
+          <span className="text-xs text-gray-500 hidden sm:block">
             {nonRestDays.length} روز
           </span>
         </div>
 
-        {/* Slider */}
         <div className="overflow-x-auto pb-2 mt-4 mb-2" ref={sliderRef}>
           <div className="flex gap-2 min-w-max">
             {nonRestDays.map((day) => (
@@ -82,7 +72,6 @@ const ExerciseEditor = ({
           </div>
         </div>
 
-        {/* Muscles for selected day under slider */}
         <div className="flex flex-wrap gap-2 mb-2 min-h-[32px]">
           {currentDay &&
             currentDay.targetMuscles.map((muscle) => (
@@ -95,34 +84,8 @@ const ExerciseEditor = ({
             ))}
         </div>
       </motion.div>
-
-      {/* Exercise Editor for selected day */}
-      {currentDay && !currentDay.targetMuscles.includes("rest") && (
-        <motion.div
-          variants={itemVariants}
-          className="bg-white rounded-xl shadow-sm p-3 sm:p-4"
-        >
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-1 sm:gap-0">
-            <div>
-              <h2 className="text-base sm:text-lg font-medium text-gray-800">
-                تعریف حرکات
-              </h2>
-              <p className="text-xs sm:text-sm text-gray-500 mt-1">
-                روز {currentDay.day}
-              </p>
-            </div>
-          </div>
-
-          <ExerciseList
-            initialExercises={currentDay.exercises}
-            onExercisesChange={(exercises) => {
-              handleExercisesChange(exercises);
-            }}
-          />
-        </motion.div>
-      )}
     </div>
   );
 };
 
-export default ExerciseEditor;
+export default MovementsDays;
