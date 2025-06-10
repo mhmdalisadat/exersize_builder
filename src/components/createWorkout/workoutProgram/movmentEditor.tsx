@@ -2,6 +2,7 @@ import React from "react";
 import type { SetType } from "../../../constants/setsType";
 import SetTypeSelector from "./setTypes/SetTypeSelector";
 
+
 const MovementEditor: React.FC = () => {
   const handleSetTypeSelect = (setType: SetType) => {
     console.log("Selected set type:", setType);

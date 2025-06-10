@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { animations } from "../../../animation";
 
 import type { DayWorkout } from "../../../store/workoutStore";
-import SetTypeSelector from "./setTypes/SetTypeSelector";
+import MovementEditor from "./movmentEditor";
 import type { SetType } from "../../../constants/setsType";
 
 interface WorkoutHeaderProps {
@@ -54,7 +54,7 @@ const WorkoutDefine: React.FC<WorkoutHeaderProps> = ({ title, currentDay }) => {
               </div>
             </motion.div>
           )}
-          <SetTypeSelector onSelect={handleSetTypeSelect} />
+          <MovementEditor />
         </motion.div>
       </motion.div>
     </div>

@@ -1,0 +1,126 @@
+// src/components/createWorkout/workoutProgram/setTypes/MovementGroupForm.tsx
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useMovementStore } from '../../../../store/movement.store';
+import { SetCountField, RestTimeField, MovementForm } from '../fields';
+
+interface MovementGroupFormProps {
+  type: 'superset' | 'giant' | 'circuit' | 'custom';
+  onSave: (data: any) => void;
+}
+
+const MovementGroupForm: React.FC<MovementGroupFormProps> = ({ type, onSave }) => {
+  const { addGroup, getGroup, updateGroup, addMovementToGroup, removeMovementFromGroup } = useMovementStore();
+  const [groupId] = useState(() => {
+    const id = crypto.randomUUID();
+    addGroup(type);
+    return id;
+  });
+
+  const group = getGroup(groupId);
+
+  const handleAddMovement = () => {
+    addMovementToGroup(groupId, {
+      name: '',
+      type: 'straight',
+      set_count: 3,
+      rep_count: 10,
+      rest_time: 60,
+      weight: 0,
+      weight_unit: 'kg',
+      tempo: '2010',
+      movement_description: '',
+    });
+  };
+
+  const getGroupTitle = () => {
+    switch (type) {
+      case 'superset': return 'سوپر ست';
+      case 'giant': return 'جاینت ست';
+      case 'circuit': return 'مدار';
+      case 'custom': return 'ست سفارشی';
+      default: return 'گروه حرکت';
+    }
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="bg-white p-6 rounded-lg shadow-lg mt-4"
+    >
+      <h3 className="text-lg font-semibold mb-4 text-gray-800">
+        {getGroupTitle()}
+      </h3>
+
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <SetCountField 
+            value={group?.set_count || 3}
+            onChange={(value) => updateGroup(groupId, { set_count: value })}
+            min={1}
+            max={20}
+          />
+          <RestTimeField 
+            value={group?.rest_time || 60}
+            onChange={(value) => updateGroup(groupId, { rest_time: value })}
+            min={0}
+            max={300}
+            step={5}
+          />
+        </div>
+
+        <div className="space-y-4">
+          <AnimatePresence>
+            {group?.movements.map((movement, index) => (
+              <motion.div
+                key={movement.id}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                className="p-4 border border-gray-200 rounded-lg"
+              >
+                <div className="flex justify-between items-center mb-4">
+                  <h4 className="font-medium">حرکت {index + 1}</h4>
+                  <button
+                    onClick={() => removeMovementFromGroup(groupId, movement.id)}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                  </button>
+                </div>
+                <MovementForm
+                  movement={movement}
+                  onChange={(data) => updateGroup(groupId, { movements: group.movements.map(m => 
+                    m.id === movement.id ? { ...m, ...data } : m
+                  )})}
+                />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+
+          <button
+            onClick={handleAddMovement}
+            className="w-full p-3 text-center text-indigo-600 border-2 border-dashed border-indigo-300 rounded-lg hover:bg-indigo-50 transition-colors duration-200"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mx-auto mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            افزودن حرکت جدید
+          </button>
+        </div>
+
+        <button
+          onClick={() => onSave(group)}
+          className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors"
+        >
+          ذخیره تنظیمات
+        </button>
+      </div>
+    </motion.div>
+  );
+};
+
+export default MovementGroupForm;

@@ -1,5 +1,5 @@
 import Dropdown from "../../common/dropdown";
-import { muscleOptions } from "../../../constants";
+import { muscleOptions } from "../../../constants/muscles";
 
 interface MultiSelectMuscleProps {
   value: string[];
@@ -12,7 +12,7 @@ const MultiSelectMuscle: React.FC<MultiSelectMuscleProps> = ({
   onChange,
   getMuscleLabel,
 }) => {
-  const handleChange = ( newValue: string | string[]) => {
+  const handleChange = (name: string, newValue: string | string[]) => {
     if (Array.isArray(newValue)) {
       // Rest day is exclusive
       if (newValue.includes("rest")) {
