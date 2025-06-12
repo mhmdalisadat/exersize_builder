@@ -4,7 +4,7 @@ import { animations } from "../../../animation";
 
 import type { DayWorkout } from "../../../store/workoutStore";
 import MovementEditor from "./movmentEditor";
-import type { SetType } from "../../../constants/setsType";
+
 
 interface WorkoutHeaderProps {
   title: string;
@@ -12,9 +12,7 @@ interface WorkoutHeaderProps {
   onExercisesChange: (exercises: any) => void;
 }
 
-const handleSetTypeSelect = (setType: SetType) => {
-  console.log(setType);
-};
+
 
 const WorkoutDefine: React.FC<WorkoutHeaderProps> = ({ title, currentDay }) => {
   return (
@@ -52,9 +50,9 @@ const WorkoutDefine: React.FC<WorkoutHeaderProps> = ({ title, currentDay }) => {
                   روز {currentDay.day}
                 </span>
               </div>
+              <MovementEditor />
             </motion.div>
           )}
-          <MovementEditor />
         </motion.div>
       </motion.div>
     </div>

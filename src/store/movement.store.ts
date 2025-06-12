@@ -30,6 +30,7 @@ interface MovementState {
   // Actions
   setCurrentSetType: (type: SetType) => void;
   setSetCount: (count: number) => void;
+  setMovementName: (name: string) => void;
   setRepCount: (count: number) => void;
   setRestTime: (time: number) => void;
   setWeight: (weight: number) => void;
@@ -61,6 +62,7 @@ interface MovementState {
 
 export const useMovementStore = create<MovementState>((set) => ({
   currentSetType: null,
+  currentSetName: "",
   currentSetData: null,
   groups: {},
 
@@ -70,6 +72,7 @@ export const useMovementStore = create<MovementState>((set) => ({
       currentSetData: {
         id: "",
         name: "",
+
         type,
         set_count: 3,
         rep_count: 10,
@@ -199,5 +202,11 @@ export const useMovementStore = create<MovementState>((set) => ({
           ),
         },
       },
+    })),
+  setMovementName: (name) =>
+    set((state) => ({
+      currentSetData: state.currentSetData
+        ? { ...state.currentSetData, name }
+        : null,
     })),
 }));

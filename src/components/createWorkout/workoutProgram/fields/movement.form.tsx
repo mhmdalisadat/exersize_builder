@@ -9,6 +9,7 @@ import {
   TempoField,
   SetDescField,
 } from "../fields";
+import NameField from "./name.field";
 
 interface MovementFormProps {
   movement: any; // نوع دقیق را از استور بگیرید
@@ -19,15 +20,19 @@ const MovementForm: React.FC<MovementFormProps> = ({ movement, onChange }) => {
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <NameField
+          initialValue={movement.name}
+          onChange={(value: string) => onChange({ name: value })}
+        />
         <SetCountField
-          value={movement?.set_count ?? 3}
-          onChange={(value) => onChange({ set_count: value })}
+          initialValue={movement?.set_count ?? 3}
+          onChange={(value: number) => onChange({ set_count: value })}
           min={1}
           max={20}
         />
         <RepCountField
-          value={movement.rep_count}
-          onChange={(value) => onChange({ rep_count: value })}
+          initialValue={movement.rep_count}
+          onChange={(value: number) => onChange({ rep_count: value })}
           min={1}
           max={100}
         />
@@ -35,15 +40,15 @@ const MovementForm: React.FC<MovementFormProps> = ({ movement, onChange }) => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <WeightField
-          value={movement.weight}
-          onChange={(value) => onChange({ weight: value })}
+          initialValue={movement.weight}
+          onChange={(value: number) => onChange({ weight: value })}
           min={0}
           max={500}
           step={0.5}
         />
         <RestTimeField
-          value={movement.rest_time}
-          onChange={(value) => onChange({ rest_time: value })}
+          initialValue={movement.rest_time}
+          onChange={(value: number) => onChange({ rest_time: value })}
           min={0}
           max={300}
           step={5}
@@ -51,12 +56,12 @@ const MovementForm: React.FC<MovementFormProps> = ({ movement, onChange }) => {
       </div>
 
       <TempoField
-        value={movement.tempo}
-        onChange={(value) => onChange({ tempo: value })}
+        initialValue={movement.tempo}
+        onChange={(value: string) => onChange({ tempo: value })}
       />
       <SetDescField
-        value={movement.movement_description}
-        onChange={(value) => onChange({ movement_description: value })}
+        initialValue={movement.movement_description}
+        onChange={(value: string) => onChange({ movement_description: value })}
       />
     </div>
   );

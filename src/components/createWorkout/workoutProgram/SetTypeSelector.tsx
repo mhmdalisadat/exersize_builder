@@ -1,14 +1,28 @@
 import React, { useState } from "react";
-import type { SetType } from "../../../../constants/setsType";
-import { setTypeOptions } from "../../../../constants/setsType";
-import { useMovementStore } from "../../../../store/movement.store";
-import {
-  SetCountField,
-  RepCountField,
-  RestTimeField,
-  WeightField,
-  TempoField,
-} from "../fields";
+import type { SetType } from "../../../constants/setsType";
+import { setTypeOptions } from "../../../constants/setsType";
+import { useMovementStore } from "../../../store/movement.store";
+import { MovementGroupForm } from "./fields";
+
+interface Movement {
+  id: string;
+  name: string;
+  type: SetType;
+  set_count: number;
+  rep_count: number;
+  rest_time: number;
+  weight: number;
+  weight_unit: "kg" | "lb";
+  tempo: string;
+  movement_description: string;
+}
+
+interface GroupData {
+  type: SetType;
+  set_count: number;
+  rest_time: number;
+  movements: Movement[];
+}
 
 interface SetTypeSelectorProps {
   onSelect: (setType: SetType) => void;
@@ -24,36 +38,13 @@ const SetTypeSelector: React.FC<SetTypeSelectorProps> = ({ onSelect }) => {
     onSelect(setType);
   };
 
-  const renderStraightSetForm = () => {
-    return (
-      <div className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <SetCountField min={1} max={20} />
-          <RepCountField min={1} max={100} />
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <RestTimeField min={0} max={300} step={5} />
-          <WeightField min={0} max={500} step={2.5} />
-        </div>
-        <TempoField />
-      </div>
-    );
-  };
-
-  const renderForm = () => {
-    if (!selectedSetType) return null;
-
-    switch (selectedSetType) {
-      case "straight":
-        return renderStraightSetForm();
-      default:
-        return null;
-    }
+  const handleSave = (data: GroupData) => {
+    console.log("Saved set data:", data);
   };
 
   return (
     <div className="w-full max-w-4xl mx-auto p-4">
-      <div className="flex flex-wrap gap-3 justify-center">
+      <div className="flex flex-wrap gap-3 justify-center mb-8">
         {setTypeOptions.map((option) => (
           <button
             key={option.value}
@@ -70,7 +61,11 @@ const SetTypeSelector: React.FC<SetTypeSelectorProps> = ({ onSelect }) => {
         ))}
       </div>
 
-      <div className="mt-6 space-y-6">{selectedSetType && renderForm()}</div>
+      <div className="mt-6 space-y-6">
+        {selectedSetType && (
+          <MovementGroupForm type={selectedSetType} onSave={handleSave} />
+        )}
+      </div>
     </div>
   );
 };
